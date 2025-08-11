@@ -1,0 +1,43 @@
+# WordPress core
+/web/wp/
+
+# Dependencies
+/vendor/
+/web/app/themes/*/node_modules/
+
+# Build files
+/web/app/themes/*/dist/
+
+# Uploads and cache
+/web/app/uploads/
+/web/app/cache/
+
+# Environment and config
+.env
+*.env
+
+# Database
+*.sql
+*.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
