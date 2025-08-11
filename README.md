@@ -1,61 +1,184 @@
-<p align="center">
-  <a href="https://roots.io/bedrock/">
-    <img alt="Bedrock" src="https://cdn.roots.io/app/uploads/logo-bedrock.svg" height="100">
-  </a>
-</p>
+# Avora WP - Modern WordPress Theme
 
-<p align="center">
-  <a href="https://packagist.org/packages/roots/bedrock">
-    <img alt="Packagist Installs" src="https://img.shields.io/packagist/dt/roots/bedrock?label=projects%20created&colorB=2b3072&colorA=525ddc&style=flat-square">
-  </a>
+A pixel-perfect WordPress theme converted from the [AVORA static website](https://github.com/aigarsild/avora), built with modern development tools and Estonian real estate company branding.
 
-  <a href="https://packagist.org/packages/roots/wordpress">
-    <img alt="roots/wordpress Packagist Downloads" src="https://img.shields.io/packagist/dt/roots/wordpress?label=roots%2Fwordpress%20downloads&logo=roots&logoColor=white&colorB=2b3072&colorA=525ddc&style=flat-square">
-  </a>
+## 🏗️ Tech Stack
 
-  <img src="https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/roots/bedrock/master/composer.json&label=wordpress&logo=roots&logoColor=white&query=$.require[%22roots/wordpress%22]&colorB=2b3072&colorA=525ddc&style=flat-square">
+- **WordPress** - Bedrock boilerplate for modern WP development
+- **Vite** - Fast build tool with hot module replacement
+- **CSS Custom Properties** - For exact brand color and spacing system
+- **Poppins Font** - Google Fonts integration
+- **Estonian Language** - Full localization support
 
-  <a href="https://github.com/roots/bedrock/actions/workflows/ci.yml">
-    <img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/roots/bedrock/ci.yml?branch=master&logo=github&label=CI&style=flat-square">
-  </a>
+## 🎨 Design System
 
-  <a href="https://twitter.com/rootswp">
-    <img alt="Follow Roots" src="https://img.shields.io/badge/follow%20@rootswp-1da1f2?logo=twitter&logoColor=ffffff&message=&style=flat-square">
-  </a>
-</p>
+### Brand Colors
+```css
+--color-primary: #14213D    /* Dark blue primary */
+--color-accent: #FCA311     /* Orange accent */
+--color-gray: #E5E5E5       /* Light gray */
+--color-white: #fff         /* Pure white */
+```
 
-<p align="center">WordPress boilerplate with Composer, easier configuration, and an improved folder structure</p>
+### Typography
+- **Font Family**: Poppins (200, 400, 500, 700, 900)
+- **H1**: 40px / Extra Bold
+- **H2**: 36px / Bold  
+- **H3**: 28px / Bold
+- **Body**: 18px / Light
 
-<p align="center">
-  <a href="https://roots.io/bedrock/">Website</a> &nbsp;&nbsp; <a href="https://roots.io/bedrock/docs/installation/">Documentation</a> &nbsp;&nbsp; <a href="https://github.com/roots/bedrock/releases">Releases</a> &nbsp;&nbsp; <a href="https://discourse.roots.io/">Community</a>
-</p>
+### Spacing System
+- **XS**: 8px
+- **SM**: 10px 
+- **MD**: 15px
+- **LG**: 20px
+- **XL**: 30px
+- **XXL**: 40px
+- **XXXL**: 60px
+- **Huge**: 80px
+- **Section**: 100px
 
-## Sponsors
+## 🚀 Features
 
-Bedrock is an open source project and completely free to use. If you've benefited from our projects and would like to support our future endeavors, please consider [sponsoring Roots](https://github.com/sponsors/roots).
+- ✅ **Pixel-Perfect Conversion** - Exact match to original static site
+- ✅ **Responsive Design** - Mobile-first approach with breakpoint at 768px
+- ✅ **Modern WordPress** - Bedrock boilerplate with Composer dependency management
+- ✅ **Fast Development** - Vite build system with hot reloading
+- ✅ **Estonian Content** - All original Estonian language content preserved
+- ✅ **SEO Optimized** - Proper meta tags, favicon setup, and semantic HTML
+- ✅ **Performance** - Optimized assets and minimal WordPress features
+- ✅ **Accessibility** - Proper ARIA labels and semantic structure
 
-<div align="center">
-<a href="https://carrot.com/"><img src="https://cdn.roots.io/app/uploads/carrot.svg" alt="Carrot" width="120" height="90"></a> <a href="https://wordpress.com/"><img src="https://cdn.roots.io/app/uploads/wordpress.svg" alt="WordPress.com" width="120" height="90"></a> <a href="https://worksitesafety.ca/careers/"><img src="https://cdn.roots.io/app/uploads/worksite-safety.svg" alt="Worksite Safety" width="120" height="90"></a> <a href="https://www.itineris.co.uk/"><img src="https://cdn.roots.io/app/uploads/itineris.svg" alt="Itineris" width="120" height="90"></a> <a href="https://bonsai.so/"><img src="https://cdn.roots.io/app/uploads/bonsai.svg" alt="Bonsai" width="120" height="90"></a>
-</div>
+## 📱 Sections
 
-## Overview
+### Hero Section
+- 70vh height with curved image overlay (border-radius: 0 0 800px 0)
+- Two-column grid layout (desktop) / stacked (mobile)
+- Estonian headline: "Loome väärtust, läbi kinnisvara"
 
-Bedrock is a WordPress boilerplate for developers that want to manage their projects with Git and Composer. Much of the philosophy behind Bedrock is inspired by the [Twelve-Factor App](http://12factor.net/) methodology, including the [WordPress specific version](https://roots.io/twelve-factor-wordpress/).
+### Stats Section  
+- Three-column grid showcasing company metrics
+- 40+ projects, 7 years experience, 87+ satisfied clients
+- Top border separator with proper spacing
 
-- Better folder structure
-- Dependency management with [Composer](https://getcomposer.org)
-- Easy WordPress configuration with environment specific files
-- Environment variables with [Dotenv](https://github.com/vlucas/phpdotenv)
-- Autoloader for mu-plugins (use regular plugins as mu-plugins)
+### Quote Section
+- Full viewport height dark section
+- Company description in Estonian
+- Centered text with optimal line length
 
-## Getting Started
+### Feature Section
+- Two-column layout with circular image (500px diameter)
+- Quality and precision messaging
+- 90vh height for visual impact
 
-See the [Bedrock installation documentation](https://roots.io/bedrock/docs/installation/).
+### Footer
+- Two-column grid with logo and contact information
+- Social media links (Facebook, Instagram)
+- Estonian business registration details
+- Copyright in Estonian: "Kõik õigused kaitstud"
 
-## Stay Connected
+## 🛠️ Installation
 
-- Join us on Discord by [sponsoring us on GitHub](https://github.com/sponsors/roots)
-- Participate on [Roots Discourse](https://discourse.roots.io/)
-- Follow [@rootswp on Twitter](https://twitter.com/rootswp)
-- Read the [Roots Blog](https://roots.io/blog/)
-- Subscribe to the [Roots Newsletter](https://roots.io/newsletter/)
+### Prerequisites
+- PHP 8.0+
+- MySQL 8.0+
+- Node.js 18+
+- Composer
+- Laravel Valet (for local development)
+
+### Setup
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/aigarsild/avora-wp.git
+   cd avora-wp
+   ```
+
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
+
+3. **Create environment file**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your database credentials and WordPress salts
+   ```
+
+4. **Create database**
+   ```bash
+   mysql -u root -e "CREATE DATABASE avora_wp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+   ```
+
+5. **Install theme dependencies**
+   ```bash
+   cd web/app/themes/avora-wp
+   npm install
+   npm run build
+   ```
+
+6. **Set up Valet (macOS)**
+   ```bash
+   cd web
+   valet link avora-wp
+   valet secure avora-wp  # Optional HTTPS
+   ```
+
+7. **Install WordPress**
+   - Visit: `https://avora-wp.test/wp/wp-admin/install.php`
+   - Complete WordPress installation
+   - Activate the "Avora WP" theme
+
+## 🎯 Development
+
+### Theme Development
+```bash
+cd web/app/themes/avora-wp
+
+# Development with hot reloading
+npm run dev
+
+# Production build
+npm run build
+```
+
+### File Structure
+```
+web/app/themes/avora-wp/
+├── src/
+│   ├── main.js           # JavaScript entry point
+│   └── style.css         # Main CSS with original styles
+├── dist/                 # Built assets (auto-generated)
+├── images/               # All original images and icons
+├── 404.php              # Error page template
+├── footer.php           # Site footer
+├── functions.php        # Theme functionality
+├── header.php           # Site header with favicons
+├── index.php            # Homepage template
+├── page.php             # Static page template
+├── single.php           # Blog post template
+└── style.css            # WordPress theme header
+```
+
+## 🌐 Original Static Site
+
+This WordPress theme is a pixel-perfect conversion of the original static website:
+- **Repository**: [github.com/aigarsild/avora](https://github.com/aigarsild/avora)
+- **Technology**: Pure HTML/CSS with modern design patterns
+- **Content**: Estonian real estate development company
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🏢 About AVORA
+
+AVORA is an Estonian capital-based real estate development company specializing in residential construction. They create thoughtfully designed living environments in Tallinn and Harju County, focusing on quality materials and innovative construction methods to build homes that last generations.
+
+- **Website**: [avora.ee](https://avora.ee)
+- **Phone**: +372 5084851
+- **Email**: info@avora.ee
+- **Address**: Tartu mnt 84a, Kesklinna linnaosa, Tallinn, Harju maakond, 10112
+
+---
+
+**Built with ❤️ in Estonia**
