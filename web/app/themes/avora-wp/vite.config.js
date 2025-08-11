@@ -9,5 +9,8 @@ export default defineConfig({
     rollupOptions: {
       input: "src/main.js"
     }
+  },
+  css: {
+    postcss: false
   }
 });

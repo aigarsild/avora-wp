@@ -1,4 +1,4 @@
 import './style.css'
 
-// Your JavaScript code here
+// WordPress theme JavaScript
 console.log('Avora WP theme loaded');
