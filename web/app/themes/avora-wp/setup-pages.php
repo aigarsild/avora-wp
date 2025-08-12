@@ -2,12 +2,33 @@
 /**
  * Page Setup Script for AVORA WP Theme
  * Run this file once to create the required pages
+ * 
+ * Access via: https://avora-wp.test/wp-content/themes/avora-wp/setup-pages.php
  */
 
-// Prevent direct access
+// Load WordPress
 if (!defined('ABSPATH')) {
-    // Include WordPress
-    require_once(__DIR__ . '/../../../../wp-config.php');
+    // Try to load WordPress
+    $wp_config_path = __DIR__ . '/../../../../wp-config.php';
+    if (file_exists($wp_config_path)) {
+        require_once($wp_config_path);
+    } else {
+        die('WordPress not found. Please run this from your WordPress installation.');
+    }
+}
+
+// Basic HTML output
+if (!function_exists('wp_insert_post')) {
+    echo '<!DOCTYPE html><html><head><title>AVORA Setup</title>';
+    echo '<style>body{font-family:Arial;max-width:800px;margin:40px auto;padding:20px;background:#f5f5f5;}';
+    echo '.container{background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}';
+    echo 'h1{color:#14213D;}.success{color:#28a745;}.error{color:#dc3545;}.info{color:#007bff;}</style>';
+    echo '</head><body><div class="container">';
+    echo '<h1>AVORA WP Theme Setup</h1>';
+    echo '<p class="error">WordPress functions not available. Please make sure WordPress is properly installed.</p>';
+    echo '<p><a href="/wp-admin/">Go to WordPress Admin</a></p>';
+    echo '</div></body></html>';
+    exit;
 }
 
 function avora_create_pages() {
@@ -133,30 +154,45 @@ function avora_create_navigation_menu() {
     }
 }
 
-// Run the setup
+// Run the setup with HTML output
 if (function_exists('wp_insert_post')) {
-    echo "<h2>AVORA WP Theme - Page Setup</h2>\n";
-    echo "<pre>\n";
+    echo '<!DOCTYPE html><html><head><title>AVORA Setup</title>';
+    echo '<style>body{font-family:Arial;max-width:800px;margin:40px auto;padding:20px;background:#f5f5f5;}';
+    echo '.container{background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}';
+    echo 'h1{color:#14213D;}.success{color:#28a745;}.error{color:#dc3545;}.info{color:#007bff;}';
+    echo 'ul{list-style:none;padding:0;}li{padding:5px 0;border-bottom:1px solid #eee;}';
+    echo '.btn{display:inline-block;padding:10px 20px;background:#14213D;color:white;text-decoration:none;border-radius:5px;margin:10px 5px 0 0;}';
+    echo '</style></head><body><div class="container">';
+    
+    echo "<h1>AVORA WP Theme - Page Setup</h1>\n";
     
     $created = avora_create_pages();
     
-    echo "\n" . str_repeat("-", 50) . "\n";
-    echo "Setup completed!\n";
-    echo "Pages created: " . count($created) . "\n";
+    echo "<div class='success'><h2>✅ Setup completed!</h2></div>";
+    echo "<p><strong>Pages created:</strong> " . count($created) . "</p>";
     
     if (!empty($created)) {
-        echo "Created pages:\n";
+        echo "<h3>Created pages:</h3><ul>";
         foreach ($created as $page) {
-            echo "- {$page}\n";
+            echo "<li class='success'>✅ {$page}</li>";
         }
+        echo "</ul>";
     }
     
-    echo "\nNext steps:\n";
-    echo "1. Go to Appearance > Menus to manage navigation\n";
-    echo "2. Go to Settings > Reading to set front page\n";
-    echo "3. Visit your site: " . home_url() . "\n";
-    echo "</pre>\n";
+    echo "<h3>Next steps:</h3>";
+    echo "<ol>";
+    echo "<li>Visit your homepage: <a href='" . home_url() . "' target='_blank'>" . home_url() . "</a></li>";
+    echo "<li>Test navigation between pages</li>";
+    echo "<li>Go to WordPress admin to manage content</li>";
+    echo "</ol>";
+    
+    echo "<div style='margin-top:30px;'>";
+    echo "<a href='" . home_url() . "' class='btn'>Visit Website</a>";
+    echo "<a href='" . admin_url() . "' class='btn'>WordPress Admin</a>";
+    echo "</div>";
+    
+    echo '</div></body></html>';
 } else {
-    echo "Error: WordPress not loaded properly.\n";
+    echo "<div class='error'>Error: WordPress not loaded properly.</div>";
 }
 ?>
