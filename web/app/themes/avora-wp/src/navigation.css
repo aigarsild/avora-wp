@@ -55,7 +55,7 @@
     text-decoration: none;
     font-weight: 500;
     font-size: 16px;
-    padding: 8px 0;
+    padding: 4px 0 2px 0;
     transition: color 0.3s ease;
 }
 
@@ -63,17 +63,26 @@
     color: var(--color-accent);
 }
 
-/* Active Link - Simple underline, but keep text dark */
+.nav-menu a:visited {
+    color: var(--color-primary);
+}
+
+.nav-menu a:visited:hover {
+    color: var(--color-accent);
+}
+
+/* Active Link - Simple underline with dark border closer to text */
 .nav-menu li.active a,
 .nav-menu .current-menu-item a {
     color: var(--color-primary);
-    border-bottom: 2px solid var(--color-accent);
+    border-bottom: 2px solid var(--color-primary);
 }
 
-/* Active link hover - still goes orange */
+/* Active link hover - text goes orange, border stays dark */
 .nav-menu li.active a:hover,
 .nav-menu .current-menu-item a:hover {
     color: var(--color-accent);
+    border-bottom: 2px solid var(--color-primary);
 }
 
 /* Mobile Menu Toggle - Simple hamburger */
