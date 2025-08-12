@@ -15,14 +15,68 @@
     </div>
 </section>
 
-<!-- Contact Information Section -->
-<section style="padding: 60px 0;">
+<!-- Office Location Section -->
+<section style="padding: 60px 0; background: #f8f9fa;">
     <div class="container">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+        <h2 style="text-align: center; margin-bottom: 60px; font-size: 36px; color: var(--color-primary);">Meie kontor</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; align-items: center;">
+            <div>
+                <h3 style="color: var(--color-primary); margin-bottom: 20px; font-size: 24px;">AVORA peakontor</h3>
+                <p style="font-size: 18px; line-height: 1.6; color: #666; margin-bottom: 30px;">
+                    Meie moodne kontor asub Tallinna südames, kus meie meeskond töötab iga päev selle nimel, et luua Eestisse erakordset kvaliteeti omavaid elukeskkondi.
+                </p>
+                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+                    <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+                        <div style="width: 40px; height: 40px; background: var(--color-accent); border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <span style="color: white; font-size: 18px;">📍</span>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--color-primary); margin-bottom: 5px;">Aadress</h4>
+                            <p style="color: #666; line-height: 1.5; margin: 0;">
+                                Tartu mnt 84a<br>
+                                Kesklinna linnaosa<br>
+                                Tallinn, Harju maakond<br>
+                                10112
+                            </p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div style="width: 40px; height: 40px; background: var(--color-accent); border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <span style="color: white; font-size: 18px;">🚗</span>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--color-primary); margin-bottom: 5px;">Parkimine</h4>
+                            <p style="color: #666; margin: 0;">Tasuta parkla maja ees</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div style="width: 40px; height: 40px; background: var(--color-accent); border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <span style="color: white; font-size: 18px;">🚌</span>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--color-primary); margin-bottom: 5px;">Ühistransport</h4>
+                            <p style="color: #666; margin: 0;">Bussi peatus "Tartu mnt" 2 min jalutuskäiguga</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <div style="width: 100%; height: 300px; background: var(--color-gray); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 64px; margin-bottom: 20px;">🏢</div>
+                <p style="color: #666; font-style: italic;">Kaasaegne kontor Tallinna südalinnas</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information Section -->
+<section style="padding: 80px 0;">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 60px; font-size: 36px; color: var(--color-primary);">Võtke meiega ühendust</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 50px;">
             
             <!-- Contact Details -->
             <div class="contact-info">
-                <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 30px; color: var(--color-primary);">Kontaktandmed</h2>
+                <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 30px; color: var(--color-primary);">Kontaktandmed</h3>
                 
                 <div class="contact-item" style="display: flex; align-items: center; margin-bottom: 20px;">
                     <img src="<?php echo get_template_directory_uri(); ?>/images/icons/phone-icon.svg" alt="Telefon" style="width: 24px; height: 24px; margin-right: 15px;">
@@ -120,13 +174,59 @@
     </div>
 </section>
 
+<!-- FAQ Section -->
+<section style="padding: 80px 0; background: #f8f9fa;">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 60px; font-size: 36px; color: var(--color-primary);">Korduma kippuvad küsimused</h2>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+                <h4 style="color: var(--color-primary); margin-bottom: 15px; font-size: 20px;">Kui kaua võtab aega uue kodu projekteerimine?</h4>
+                <p style="color: #666; line-height: 1.6; margin: 0;">Tavaliselt võtab projekteerimine 3-6 kuud, sõltuvalt projekti keerukusest ja mastaapist. Lihtsamad projektid võivad valmida kiiremini.</p>
+            </div>
+            <div style="background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+                <h4 style="color: var(--color-primary); margin-bottom: 15px; font-size: 20px;">Millised on tüüpilised ehitusajad?</h4>
+                <p style="color: #666; line-height: 1.6; margin: 0;">Korterelamu ehitamine võtab tavaliselt 12-18 kuud, eramaja 6-12 kuud. Täpne aeg sõltub projekti suurusest ja ilmastikust.</p>
+            </div>
+            <div style="background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+                <h4 style="color: var(--color-primary); margin-bottom: 15px; font-size: 20px;">Kas pakute ka järelteenindust?</h4>
+                <p style="color: #666; line-height: 1.6; margin: 0;">Jah, pakume täielikku järelteenindust. Kõik meie hooned on kaetud 2-aastase garantiiga ja pakume ka pikaajalist hooldust.</p>
+            </div>
+            <div style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+                <h4 style="color: var(--color-primary); margin-bottom: 15px; font-size: 20px;">Kuidas saab kodu ostmise protsessi alustada?</h4>
+                <p style="color: #666; line-height: 1.6; margin: 0;">Võtke meiega ühendust telefoni või e-maili teel. Lepime kokku konsultatsiooni, kus räägime teie vajadustest ja võimalustest.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Company Information -->
 <section class="quote-section">
     <div class="container">
         <h2>AVORA OÜ</h2>
-        <p>Registrikood: 14602827<br>
-        Käibemaksukohustuslane alates: 21.11.2018</p>
-        <p>Oleme kinnisvaraarenduse valdkonnas tegutsenud üle 7 aasta ja tegutseme Tallinna ning Harjumaa piirkonnas.</p>
+        <p style="font-size: 20px; margin-bottom: 30px;">Registrikood: 14602827 | Käibemaksukohustuslane alates: 21.11.2018</p>
+        <p style="font-size: 18px; line-height: 1.6;">Oleme kinnisvaraarenduse valdkonnas tegutsenud üle 7 aasta ja tegutseme Tallinna ning Harjumaa piirkonnas. Meie eesmärk on luua kodusid, mis kestavad põlvkondade vältel.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-top: 50px;">
+            <div style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 15px;">🏆</div>
+                <h4 style="color: var(--color-accent); margin-bottom: 5px;">7+ aastat</h4>
+                <p style="color: #666;">Kogemust</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 15px;">🏗️</div>
+                <h4 style="color: var(--color-accent); margin-bottom: 5px;">40+ projekti</h4>
+                <p style="color: #666;">Valmis</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 15px;">😊</div>
+                <h4 style="color: var(--color-accent); margin-bottom: 5px;">87+ klienti</h4>
+                <p style="color: #666;">Rahul</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 15px;">📍</div>
+                <h4 style="color: var(--color-accent); margin-bottom: 5px;">2 maakonda</h4>
+                <p style="color: #666;">Tallinn & Harju</p>
+            </div>
+        </div>
     </div>
 </section>
 
