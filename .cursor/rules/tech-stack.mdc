@@ -1,0 +1,19 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+This is a lightweight WordPress project built with **Bedrock**, **Vite**, and **Tailwind CSS** following modern development practices.
+
+# Technical stack
+
+Wordpress
+Bedrock
+- ✅ **Bedrock** - Modern WordPress boilerplate
+- ✅ **Vite** - Fast build tool with HMR
+- ✅ **Tailwind CSS** - Utility-first CSS framework
+- ✅ **Clean Code** - Modern PHP practices
+- ✅ **Git Ready** - Proper .gitignore setup
+- ✅ **Responsive Design** - Mobile-first approach
+- ✅ **Performance Optimized** - Minimal, fast-loading assets

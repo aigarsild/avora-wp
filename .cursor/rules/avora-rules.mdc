@@ -1,0 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Coding pattern preferences
+
+- Always prefer simple solutions
+- Avoid duplication of code whenever possible, check for other areas in the codebase to see if there might already be similar functionality
+- Write code that takes into account different environments: dev and prod
+- You will only make the changes that are requested and nothing more, if you see something could be added/improved you can suggest a summary at the end of the request
+-When fixing an issue or a bug, do not introduce a new pattern or technology without first exhausting all options for the existing implementation. And if you finally do this make sure to remove the old implementation afterwards so we dont have duplicated logic.
+- Keep the codebase very clean and organized
+- Avoid writing scripts in files if possible, especially if the script is likely only to be run once
+- Avoid having files over 200-300 lines of code. Refactor at that point
+- Always write code that is easy to extend. Also write code that is easy to understand for other developer
+- Use comments for developers to understand the functionality easily
+- Mocking data is only needed for tests. Never mock data for dev and prod
+- Never add stubbing or fake data patterns to code that affects the dev or prod environments
+- Never overwrite my .env files without asking and confirming

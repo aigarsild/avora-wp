@@ -43,18 +43,19 @@
 <body <?php body_class('font-brand'); ?>>
 <?php wp_body_open(); ?>
 
-<!-- Header Section -->
-<header class="header">
+<!-- Modern Responsive Header -->
+<header class="modern-header">
     <div class="container">
-        <div class="header-content" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 0;">
+        <div class="header-content">
+            <!-- Logo -->
             <div class="logo">
-                <a href="<?php echo home_url(); ?>">
-                    <img src="<?php echo get_template_directory_uri(); ?>/logo.svg" alt="<?php bloginfo('name'); ?> Logo" class="logo-img" style="height: 50px;">
+                <a href="<?php echo home_url(); ?>" class="logo-link">
+                    <img src="<?php echo get_template_directory_uri(); ?>/logo.svg" alt="<?php bloginfo('name'); ?> Logo" class="logo-img">
                 </a>
             </div>
             
-            <!-- Navigation Menu -->
-            <nav class="main-navigation" style="display: flex; align-items: center;">
+            <!-- Desktop Navigation -->
+            <nav class="desktop-navigation">
                 <?php
                 if (has_nav_menu('primary')) {
                     wp_nav_menu([
@@ -64,89 +65,69 @@
                         'depth' => 1,
                     ]);
                 } else {
-                    // Fallback menu if navigation menu is not set up in admin
-                    echo '<ul class="nav-menu" style="display: flex; list-style: none; margin: 0; padding: 0; gap: 30px;">';
-                    echo '<li><a href="' . home_url() . '" style="color: var(--color-primary); text-decoration: none; font-weight: 500; font-size: 16px;">Esileht</a></li>';
-                    echo '<li><a href="' . home_url('/meist') . '" style="color: var(--color-primary); text-decoration: none; font-weight: 500; font-size: 16px;">Meist</a></li>';
-                    echo '<li><a href="' . home_url('/projektid') . '" style="color: var(--color-primary); text-decoration: none; font-weight: 500; font-size: 16px;">Projektid</a></li>';
-                    echo '<li><a href="' . home_url('/kontakt') . '" style="color: var(--color-primary); text-decoration: none; font-weight: 500; font-size: 16px;">Kontakt</a></li>';
+                    // Fallback menu with modern styling
+                    echo '<ul class="nav-menu">';
+                    
+                    $current_url = $_SERVER['REQUEST_URI'];
+                    $menu_items = [
+                        ['url' => home_url(), 'title' => 'Esileht', 'slug' => '/'],
+                        ['url' => home_url('/meist'), 'title' => 'Meist', 'slug' => '/meist'],
+                        ['url' => home_url('/projektid'), 'title' => 'Projektid', 'slug' => '/projektid'],
+                        ['url' => home_url('/kontakt'), 'title' => 'Kontakt', 'slug' => '/kontakt']
+                    ];
+                    
+                    foreach ($menu_items as $item) {
+                        $is_active = ($current_url === $item['slug'] || str_contains($current_url, $item['slug']));
+                        $active_class = $is_active ? ' class="active"' : '';
+                        echo '<li' . $active_class . '><a href="' . $item['url'] . '">' . $item['title'] . '</a></li>';
+                    }
+                    
                     echo '</ul>';
                 }
                 ?>
-                
-                <!-- Mobile Menu Toggle -->
-                <button class="mobile-menu-toggle" style="display: none; background: none; border: none; font-size: 20px; color: var(--color-primary); cursor: pointer; margin-left: 20px;" onclick="toggleMobileMenu()">
-                    ☰
-                </button>
             </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" id="mobileToggle" aria-label="Toggle mobile menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
         </div>
-        
-        <!-- Mobile Navigation Menu -->
-        <nav class="mobile-navigation" id="mobileNav" style="display: none; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 20px; border-radius: 10px; overflow: hidden;">
-            <ul style="list-style: none; margin: 0; padding: 0;">
-                <li><a href="<?php echo home_url(); ?>" style="display: block; padding: 15px 20px; color: var(--color-primary); text-decoration: none; border-bottom: 1px solid #eee;">Esileht</a></li>
-                <li><a href="<?php echo home_url('/meist'); ?>" style="display: block; padding: 15px 20px; color: var(--color-primary); text-decoration: none; border-bottom: 1px solid #eee;">Meist</a></li>
-                <li><a href="<?php echo home_url('/projektid'); ?>" style="display: block; padding: 15px 20px; color: var(--color-primary); text-decoration: none; border-bottom: 1px solid #eee;">Projektid</a></li>
-                <li><a href="<?php echo home_url('/kontakt'); ?>" style="display: block; padding: 15px 20px; color: var(--color-primary); text-decoration: none;">Kontakt</a></li>
-            </ul>
-        </nav>
     </div>
+    
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileOverlay"></div>
+    
+    <!-- Mobile Navigation Menu -->
+    <nav class="mobile-navigation" id="mobileNav">
+        <div class="mobile-nav-content">
+            <ul class="mobile-nav-menu">
+                <?php
+                $menu_items = [
+                    ['url' => home_url(), 'title' => 'Esileht', 'icon' => '🏠'],
+                    ['url' => home_url('/meist'), 'title' => 'Meist', 'icon' => '👥'],
+                    ['url' => home_url('/projektid'), 'title' => 'Projektid', 'icon' => '🏗️'],
+                    ['url' => home_url('/kontakt'), 'title' => 'Kontakt', 'icon' => '📞']
+                ];
+                
+                foreach ($menu_items as $item) {
+                    echo '<li><a href="' . $item['url'] . '"><span class="nav-icon">' . $item['icon'] . '</span>' . $item['title'] . '</a></li>';
+                }
+                ?>
+            </ul>
+            
+            <!-- Contact Info in Mobile Menu -->
+            <div class="mobile-nav-footer">
+                <div class="contact-quick">
+                    <a href="tel:+37250848851" class="contact-item">
+                        <span>📞</span> +372 5084851
+                    </a>
+                    <a href="mailto:info@avora.ee" class="contact-item">
+                        <span>✉️</span> info@avora.ee
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 </header>
-
-<style>
-/* Navigation Styles */
-.nav-menu {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 30px;
-}
-
-.nav-menu a {
-    color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 16px;
-    transition: color 0.3s ease;
-}
-
-.nav-menu a:hover {
-    color: var(--color-accent);
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .main-navigation .nav-menu {
-        display: none;
-    }
-    
-    .mobile-menu-toggle {
-        display: block !important;
-    }
-}
-
-@media (min-width: 769px) {
-    .mobile-navigation {
-        display: none !important;
-    }
-}
-</style>
-
-<script>
-function toggleMobileMenu() {
-    const mobileNav = document.getElementById('mobileNav');
-    const isVisible = mobileNav.style.display === 'block';
-    mobileNav.style.display = isVisible ? 'none' : 'block';
-}
-
-// Close mobile menu when clicking outside
-document.addEventListener('click', function(event) {
-    const mobileNav = document.getElementById('mobileNav');
-    const menuToggle = document.querySelector('.mobile-menu-toggle');
-    
-    if (!mobileNav.contains(event.target) && !menuToggle.contains(event.target)) {
-        mobileNav.style.display = 'none';
-    }
-});
-</script>
