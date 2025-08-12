@@ -46,10 +46,107 @@
 <!-- Header Section -->
 <header class="header">
     <div class="container">
-        <div class="logo">
-            <a href="<?php echo home_url(); ?>">
-                <img src="<?php echo get_template_directory_uri(); ?>/logo.svg" alt="<?php bloginfo('name'); ?> Logo" class="logo-img">
-            </a>
+        <div class="header-content" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 0;">
+            <div class="logo">
+                <a href="<?php echo home_url(); ?>">
+                    <img src="<?php echo get_template_directory_uri(); ?>/logo.svg" alt="<?php bloginfo('name'); ?> Logo" class="logo-img" style="height: 50px;">
+                </a>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="main-navigation" style="display: flex; align-items: center;">
+                <?php
+                if (has_nav_menu('primary')) {
+                    wp_nav_menu([
+                        'theme_location' => 'primary',
+                        'menu_class' => 'nav-menu',
+                        'container' => false,
+                        'depth' => 1,
+                    ]);
+                } else {
+                    // Fallback menu if navigation menu is not set up in admin
+                    echo '<ul class="nav-menu" style="display: flex; list-style: none; margin: 0; padding: 0; gap: 30px;">';
+                    echo '<li><a href="' . home_url() . '" style="color: var(--color-primary); text-decoration: none; font-weight: 500; font-size: 16px;">Esileht</a></li>';
+                    echo '<li><a href="' . home_url('/meist') . '" style="color: var(--color-primary); text-decoration: none; font-weight: 500; font-size: 16px;">Meist</a></li>';
+                    echo '<li><a href="' . home_url('/projektid') . '" style="color: var(--color-primary); text-decoration: none; font-weight: 500; font-size: 16px;">Projektid</a></li>';
+                    echo '<li><a href="' . home_url('/kontakt') . '" style="color: var(--color-primary); text-decoration: none; font-weight: 500; font-size: 16px;">Kontakt</a></li>';
+                    echo '</ul>';
+                }
+                ?>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" style="display: none; background: none; border: none; font-size: 20px; color: var(--color-primary); cursor: pointer; margin-left: 20px;" onclick="toggleMobileMenu()">
+                    ☰
+                </button>
+            </nav>
         </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <nav class="mobile-navigation" id="mobileNav" style="display: none; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 20px; border-radius: 10px; overflow: hidden;">
+            <ul style="list-style: none; margin: 0; padding: 0;">
+                <li><a href="<?php echo home_url(); ?>" style="display: block; padding: 15px 20px; color: var(--color-primary); text-decoration: none; border-bottom: 1px solid #eee;">Esileht</a></li>
+                <li><a href="<?php echo home_url('/meist'); ?>" style="display: block; padding: 15px 20px; color: var(--color-primary); text-decoration: none; border-bottom: 1px solid #eee;">Meist</a></li>
+                <li><a href="<?php echo home_url('/projektid'); ?>" style="display: block; padding: 15px 20px; color: var(--color-primary); text-decoration: none; border-bottom: 1px solid #eee;">Projektid</a></li>
+                <li><a href="<?php echo home_url('/kontakt'); ?>" style="display: block; padding: 15px 20px; color: var(--color-primary); text-decoration: none;">Kontakt</a></li>
+            </ul>
+        </nav>
     </div>
 </header>
+
+<style>
+/* Navigation Styles */
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 30px;
+}
+
+.nav-menu a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--color-accent);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .main-navigation .nav-menu {
+        display: none;
+    }
+    
+    .mobile-menu-toggle {
+        display: block !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-navigation {
+        display: none !important;
+    }
+}
+</style>
+
+<script>
+function toggleMobileMenu() {
+    const mobileNav = document.getElementById('mobileNav');
+    const isVisible = mobileNav.style.display === 'block';
+    mobileNav.style.display = isVisible ? 'none' : 'block';
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileNav = document.getElementById('mobileNav');
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (!mobileNav.contains(event.target) && !menuToggle.contains(event.target)) {
+        mobileNav.style.display = 'none';
+    }
+});
+</script>
