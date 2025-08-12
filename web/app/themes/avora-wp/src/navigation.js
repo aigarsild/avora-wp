@@ -8,6 +8,7 @@ class SimpleNavigation {
         this.mobileToggle = document.getElementById('mobileToggle');
         this.mobileNav = document.getElementById('mobileNav');
         this.mobileOverlay = document.getElementById('mobileOverlay');
+        this.mobileClose = document.getElementById('mobileClose');
         this.header = document.querySelector('.modern-header');
         this.isMenuOpen = false;
         
@@ -32,6 +33,14 @@ class SimpleNavigation {
         // Overlay click to close
         if (this.mobileOverlay) {
             this.mobileOverlay.addEventListener('click', () => {
+                this.closeMobileMenu();
+            });
+        }
+        
+        // Close button click
+        if (this.mobileClose) {
+            this.mobileClose.addEventListener('click', (e) => {
+                e.preventDefault();
                 this.closeMobileMenu();
             });
         }

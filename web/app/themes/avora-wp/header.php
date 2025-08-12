@@ -102,6 +102,12 @@
     <!-- Mobile Navigation Menu -->
     <nav class="mobile-navigation" id="mobileNav">
         <div class="mobile-nav-content">
+            <!-- Close Button -->
+            <button class="mobile-nav-close" id="mobileClose" aria-label="Close mobile menu">
+                <span class="close-line"></span>
+                <span class="close-line"></span>
+            </button>
+            
             <ul class="mobile-nav-menu">
                 <li><a href="<?php echo home_url(); ?>">Esileht</a></li>
                 <li><a href="<?php echo home_url('/meist'); ?>">Meist</a></li>
