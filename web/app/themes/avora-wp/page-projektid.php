@@ -1,12 +1,10 @@
 <?php get_header(); ?>
 
 <!-- Page Header -->
-<section style="padding: 80px 0 60px 0;">
+<section class="page-header">
     <div class="container">
-        <div style="text-align: center;">
-            <h1 style="font-size: 48px; font-weight: 900; color: var(--color-primary); margin-bottom: 20px;">Projektid</h1>
-            <p style="font-size: 20px; color: #666; max-width: 700px; margin: 0 auto; line-height: 1.6;">Tutvuge meie teostatud ja käimasolevate projektidega - igaüks neist on unikaalne lugu kvaliteetsest arhitektuurist.</p>
-        </div>
+        <h1 class="page-title">Projektid</h1>
+        <p class="page-description">Tutvuge meie teostatud ja käimasolevate projektidega - igaüks neist on unikaalne lugu kvaliteetsest arhitektuurist.</p>
     </div>
 </section>
 
