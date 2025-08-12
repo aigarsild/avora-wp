@@ -1,16 +1,11 @@
 <?php get_header(); ?>
 
-<!-- About Hero Section -->
-<section class="hero" style="padding: 80px 0;">
+<!-- Page Header -->
+<section style="padding: 80px 0 60px 0;">
     <div class="container">
-        <div class="hero-content">
-            <div class="hero-text">
-                <h1>Meist</h1>
-                <p>AVORA on Eesti kapitalil põhinev kinnisvaraarendus ettevõte, mis loob tuleviku kodusid täna.</p>
-            </div>
-            <div class="hero-image">
-                <img src="<?php echo get_template_directory_uri(); ?>/images/hero.jpg" alt="AVORA meeskond" class="hero-img">
-            </div>
+        <div style="text-align: center;">
+            <h1 style="font-size: 48px; font-weight: 900; color: var(--color-primary); margin-bottom: 20px;">Meist</h1>
+            <p style="font-size: 20px; color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6;">AVORA on Eesti kapitalil põhinev kinnisvaraarendus ettevõte, mis loob tuleviku kodusid täna.</p>
         </div>
     </div>
 </section>
