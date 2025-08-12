@@ -63,11 +63,17 @@
     color: var(--color-accent);
 }
 
-/* Active Link - Simple underline */
+/* Active Link - Simple underline, but keep text dark */
 .nav-menu li.active a,
 .nav-menu .current-menu-item a {
-    color: var(--color-accent);
+    color: var(--color-primary);
     border-bottom: 2px solid var(--color-accent);
+}
+
+/* Active link hover - still goes orange */
+.nav-menu li.active a:hover,
+.nav-menu .current-menu-item a:hover {
+    color: var(--color-accent);
 }
 
 /* Mobile Menu Toggle - Simple hamburger */
