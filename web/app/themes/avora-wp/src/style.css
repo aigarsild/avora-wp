@@ -641,12 +641,12 @@ a:visited {
 
 /* Page Headers */
 .page-header {
-    padding: var(--spacing-huge) 0 var(--spacing-section);
-    text-align: center;
+    padding: var(--spacing-section) 0;
+    text-align: right;
 }
 
 .page-title {
-    font-size: var(--font-size-h1);
+    font-size: var(--font-size-h2);
     font-weight: var(--font-weight-extra-bold);
     color: var(--color-primary);
     margin-bottom: var(--spacing-lg);
@@ -658,7 +658,7 @@ a:visited {
     font-weight: var(--font-weight-light);
     color: #666;
     max-width: 700px;
-    margin: 0 auto;
+    margin-left: auto;
     line-height: var(--line-height-relaxed);
 }
 
