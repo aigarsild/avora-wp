@@ -61,14 +61,17 @@
 
 .nav-menu a:hover {
     color: var(--color-accent);
+    text-decoration: none;
 }
 
 .nav-menu a:visited {
     color: var(--color-primary);
+    text-decoration: none;
 }
 
 .nav-menu a:visited:hover {
     color: var(--color-accent);
+    text-decoration: none;
 }
 
 /* Active Link - Simple underline with dark border closer to text */
