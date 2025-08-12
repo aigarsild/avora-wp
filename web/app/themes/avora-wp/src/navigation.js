@@ -101,11 +101,20 @@ class SimpleNavigation {
         if (!this.header) return;
         
         const scrollY = window.scrollY;
+        const logoImg = document.querySelector('.logo-img');
         
         if (scrollY > 50) {
             this.header.classList.add('scrolled');
+            // Switch to white logo when scrolled
+            if (logoImg && !logoImg.src.includes('avora-logo-white.svg')) {
+                logoImg.src = logoImg.src.replace('logo.svg', 'avora-logo-white.svg');
+            }
         } else {
             this.header.classList.remove('scrolled');
+            // Switch back to dark logo when at top
+            if (logoImg && logoImg.src.includes('avora-logo-white.svg')) {
+                logoImg.src = logoImg.src.replace('avora-logo-white.svg', 'logo.svg');
+            }
         }
     }
     

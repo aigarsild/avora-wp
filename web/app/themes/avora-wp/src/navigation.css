@@ -8,11 +8,11 @@
     top: 0;
     z-index: 1000;
     background: transparent;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .modern-header.scrolled {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--color-primary);
 }
 
 /* Header Content */
@@ -74,6 +74,36 @@
     text-decoration: none;
 }
 
+/* Scrolled Header Navigation - White Text */
+.modern-header.scrolled .nav-menu a {
+    color: white;
+}
+
+.modern-header.scrolled .nav-menu a:hover {
+    color: var(--color-accent);
+}
+
+.modern-header.scrolled .nav-menu a:visited {
+    color: white;
+}
+
+.modern-header.scrolled .nav-menu a:visited:hover {
+    color: var(--color-accent);
+}
+
+/* Active link when scrolled - white text with accent underline */
+.modern-header.scrolled .nav-menu li.active a,
+.modern-header.scrolled .nav-menu .current-menu-item a {
+    color: white;
+    border-bottom: 2px solid var(--color-accent);
+}
+
+.modern-header.scrolled .nav-menu li.active a:hover,
+.modern-header.scrolled .nav-menu .current-menu-item a:hover {
+    color: var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+}
+
 /* Active Link - Simple underline with dark border closer to text */
 .nav-menu li.active a,
 .nav-menu .current-menu-item a {
@@ -124,6 +154,11 @@
 
 .mobile-menu-toggle.active .hamburger-line:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile hamburger when scrolled - white lines */
+.modern-header.scrolled .hamburger-line {
+    background: white;
 }
 
 /* Mobile Navigation Overlay */
