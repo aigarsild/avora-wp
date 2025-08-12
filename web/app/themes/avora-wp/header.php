@@ -103,31 +103,11 @@
     <nav class="mobile-navigation" id="mobileNav">
         <div class="mobile-nav-content">
             <ul class="mobile-nav-menu">
-                <?php
-                $menu_items = [
-                    ['url' => home_url(), 'title' => 'Esileht', 'icon' => '🏠'],
-                    ['url' => home_url('/meist'), 'title' => 'Meist', 'icon' => '👥'],
-                    ['url' => home_url('/projektid'), 'title' => 'Projektid', 'icon' => '🏗️'],
-                    ['url' => home_url('/kontakt'), 'title' => 'Kontakt', 'icon' => '📞']
-                ];
-                
-                foreach ($menu_items as $item) {
-                    echo '<li><a href="' . $item['url'] . '"><span class="nav-icon">' . $item['icon'] . '</span>' . $item['title'] . '</a></li>';
-                }
-                ?>
+                <li><a href="<?php echo home_url(); ?>">Esileht</a></li>
+                <li><a href="<?php echo home_url('/meist'); ?>">Meist</a></li>
+                <li><a href="<?php echo home_url('/projektid'); ?>">Projektid</a></li>
+                <li><a href="<?php echo home_url('/kontakt'); ?>">Kontakt</a></li>
             </ul>
-            
-            <!-- Contact Info in Mobile Menu -->
-            <div class="mobile-nav-footer">
-                <div class="contact-quick">
-                    <a href="tel:+37250848851" class="contact-item">
-                        <span>📞</span> +372 5084851
-                    </a>
-                    <a href="mailto:info@avora.ee" class="contact-item">
-                        <span>✉️</span> info@avora.ee
-                    </a>
-                </div>
-            </div>
         </div>
     </nav>
 </header>
