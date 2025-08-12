@@ -641,7 +641,7 @@ a:visited {
 
 /* Page Headers */
 .page-header {
-    padding: var(--spacing-section) 0 var(--spacing-section) 0;
+    padding: var(--spacing-section) 0 var(--spacing-xxl) 0;
     text-align: center;
 }
 
