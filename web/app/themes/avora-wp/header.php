@@ -40,7 +40,13 @@
     <?php wp_head(); ?>
 </head>
 
-<body <?php body_class('font-brand'); ?>>
+<body <?php 
+$body_classes = ['font-brand'];
+if (is_front_page()) {
+    $body_classes[] = 'has-hero';
+}
+body_class($body_classes); 
+?>>
 <?php wp_body_open(); ?>
 
 <!-- Modern Responsive Header -->

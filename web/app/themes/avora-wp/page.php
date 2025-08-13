@@ -1,28 +1,38 @@
 <?php get_header(); ?>
 
-<main class="py-section bg-brand-white">
+<!-- Page Header -->
+<section class="page-header">
     <div class="container">
-        <div class="max-w-4xl mx-auto">
+        <?php if (have_posts()) : ?>
+            <?php while (have_posts()) : the_post(); ?>
+                <h1 class="page-title"><?php the_title(); ?></h1>
+                <?php if (has_excerpt()) : ?>
+                    <p class="page-description"><?php the_excerpt(); ?></p>
+                <?php endif; ?>
+            <?php endwhile; ?>
+        <?php endif; ?>
+    </div>
+</section>
+
+<!-- Page Content -->
+<section class="page-content">
+    <div class="container">
+        <div class="page-content-inner">
             <?php if (have_posts()) : ?>
                 <?php while (have_posts()) : the_post(); ?>
-                    <article>
-                        <header class="mb-xxxl text-center">
-                            <h1 class="text-h1 text-brand-primary mb-lg"><?php the_title(); ?></h1>
-                            <?php if (has_post_thumbnail()) : ?>
-                                <div class="mb-xl">
-                                    <?php the_post_thumbnail('large', ['class' => 'w-full h-96 object-cover rounded-lg']); ?>
-                                </div>
-                            <?php endif; ?>
-                        </header>
-                        
-                        <div class="content text-large text-brand-primary leading-relaxed prose prose-lg max-w-none">
-                            <?php the_content(); ?>
+                    <?php if (has_post_thumbnail()) : ?>
+                        <div class="mb-10">
+                            <?php the_post_thumbnail('large', ['class' => 'w-full h-96 object-cover rounded-lg shadow-lg']); ?>
                         </div>
-                    </article>
+                    <?php endif; ?>
+                    
+                    <div class="prose prose-lg max-w-none">
+                        <?php the_content(); ?>
+                    </div>
                 <?php endwhile; ?>
             <?php endif; ?>
         </div>
     </div>
-</main>
+</section>
 
 <?php get_footer(); ?>

@@ -20,7 +20,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0;
+    padding: 8px 0;
 }
 
 /* Logo Styles */
@@ -31,7 +31,7 @@
 }
 
 .logo-img {
-    height: 50px;
+    height: 25px;
     width: auto;
 }
 
@@ -91,17 +91,17 @@
     color: var(--color-accent);
 }
 
-/* Active link when scrolled - white text with accent underline */
+/* Active link when scrolled - white text with white underline */
 .modern-header.scrolled .nav-menu li.active a,
 .modern-header.scrolled .nav-menu .current-menu-item a {
     color: white;
-    border-bottom: 2px solid var(--color-accent);
+    border-bottom: 2px solid white;
 }
 
 .modern-header.scrolled .nav-menu li.active a:hover,
 .modern-header.scrolled .nav-menu .current-menu-item a:hover {
     color: var(--color-accent);
-    border-bottom: 2px solid var(--color-accent);
+    border-bottom: 2px solid white;
 }
 
 /* Active Link - Simple underline with dark border closer to text */
@@ -272,11 +272,11 @@
     }
     
     .header-content {
-        padding: 15px 0;
+        padding: 8px 0;
     }
     
     .logo-img {
-        height: 40px;
+        height: 22px;
     }
 }
 

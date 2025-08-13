@@ -19,3 +19,6 @@ alwaysApply: true
 - Mocking data is only needed for tests. Never mock data for dev and prod
 - Never add stubbing or fake data patterns to code that affects the dev or prod environments
 - Never overwrite my .env files without asking and confirming
+- Only use global brand styles - colros, font sizes, paddings
+- Dont write inline css, use classnames
+- write reusable css styles

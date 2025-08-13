@@ -30,11 +30,7 @@
                         <img src="<?php echo get_template_directory_uri(); ?>/images/icons/map-icon.svg" alt="Asukoht" class="contact-icon">
                         Tartu mnt 84a, Kesklinna linnaosa, Tallinn, Harju maakond, 10112
                     </p>
-                    <div class="business-details">
-                        <p>Reg.kood: 16741810 | </p>
-                        <p>MTR: EEH013730 | </p>
-                        <p>KMKR: EE102691281 </p>
-                    </div>
+
                 </div>
             </div>
         </div>
