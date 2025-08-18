@@ -716,7 +716,24 @@ input, textarea, select {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0 0 800px 0;
+}
+
+/* Project Header Specific Styling */
+.project-header.hero {
+    position: relative;
+    overflow: hidden;
+    padding-top: 0;
+    margin-top: 0;
+    height: 100vh;
+}
+
+.project-header.hero .hero-content {
+    padding-top: 80px; /* Add space for fixed navigation */
+}
+
+.project-header.hero .hero-image {
+    top: 0; /* Extend image to very top */
+    bottom: 0;
 }
 
 /* Stats Section */
@@ -1035,7 +1052,7 @@ input, textarea, select {
 /* Header */
 .modern-header {
     padding: var(--space-sm) 0;
-    background-color: transparent;
+    background-color: var(--color-white);
     position: fixed;
     top: 0;
     left: 0;
@@ -1479,7 +1496,7 @@ input, textarea, select {
 }
 
 .project-description {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-base);
     color: var(--text-secondary);
     line-height: var(--line-height-relaxed);
     margin: 0;
@@ -2220,6 +2237,18 @@ input, textarea, select {
         position: relative;
         width: 100%;
         height: 300px;
+        order: -1;
+    }
+    
+    /* Project header mobile adjustments */
+    .project-header.hero .hero-content {
+        padding-top: 60px; /* Smaller mobile nav height */
+    }
+    
+    .project-header.hero .hero-image {
+        position: relative;
+        top: auto;
+        bottom: auto;
         order: -1;
     }
     

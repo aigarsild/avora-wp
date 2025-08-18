@@ -3,20 +3,25 @@
 <?php while (have_posts()) : the_post(); ?>
 
 <!-- Project Header -->
-<section class="project-header">
+<section class="project-header hero">
     <div class="container">
-        <div class="project-header-content">
-            <div class="project-header-text">
+        <div class="project-header-content hero-content">
+            <div class="project-header-text hero-text">
                 <h1><?php the_title(); ?></h1>
-                <?php if (get_the_excerpt()) : ?>
-                    <p class="project-description"><?php the_excerpt(); ?></p>
+                <?php if (get_the_content()) : ?>
+                    <div class="project-description"><?php the_content(); ?></div>
                 <?php endif; ?>
+                <div class="hero-buttons">
+                    <a href="<?php echo home_url('/projektid'); ?>" class="btn btn-outline-accent">
+                        ← Tagasi projektidesse
+                    </a>
+                </div>
             </div>
-            <div>
-                <a href="<?php echo home_url('/projektid'); ?>" class="btn btn-outline">
-                    ← Tagasi projektidesse
-                </a>
-            </div>
+            <?php if (has_post_thumbnail()) : ?>
+                <div class="project-header-image hero-image">
+                    <?php the_post_thumbnail('large', ['class' => 'hero-img']); ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
@@ -36,16 +41,9 @@ if (!empty($gallery_image_ids)) {
     }
 }
 
-if (has_post_thumbnail() || !empty($gallery_images)) : ?>
+if (!empty($gallery_images)) : ?>
 <section class="project-gallery">
     <div class="container p-0">
-        
-        <!-- Main Featured Image -->
-        <?php if (has_post_thumbnail()) : ?>
-            <div class="featured-image">
-                <?php the_post_thumbnail('large'); ?>
-            </div>
-        <?php endif; ?>
         
         <!-- Image Gallery Grid -->
         <?php if (!empty($gallery_images)) : ?>
@@ -95,79 +93,7 @@ document.addEventListener('keydown', function(e) {
 
 <?php endif; ?>
 
-<!-- Project Details -->
-<section class="project-details">
-    <div class="container">
-        <div class="project-details-grid">
-            
-            <!-- Project Content -->
-            <div class="project-content">
-                <?php if (get_the_content()) : ?>
-                    <?php the_content(); ?>
-                <?php endif; ?>
-            </div>
-            
-            <!-- Project Meta -->
-            <div class="project-meta-sidebar">
-                <h3 class="meta-title">Projekti detailid</h3>
-                
-                <?php
-                $project_status = get_field('project_status') ?: 'Teadmata';
-                $project_location = get_field('project_location') ?: '';
-                $project_year = get_field('project_year') ?: '';
-                $project_type = get_field('project_type') ?: '';
-                $project_units = get_field('project_units') ?: '';
-                $project_area = get_field('project_area') ?: '';
-                ?>
-                
-                <div class="meta-list">
-                    <?php if ($project_status) : ?>
-                        <div class="meta-list-item">
-                            <span class="meta-list-label">Staatus:</span>
-                            <span class="meta-list-value"><?php echo esc_html($project_status); ?></span>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($project_location) : ?>
-                        <div class="meta-list-item">
-                            <span class="meta-list-label">Asukoht:</span>
-                            <span class="meta-list-value"><?php echo esc_html($project_location); ?></span>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($project_year) : ?>
-                        <div class="meta-list-item">
-                            <span class="meta-list-label">Aasta:</span>
-                            <span class="meta-list-value"><?php echo esc_html($project_year); ?></span>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($project_type) : ?>
-                        <div class="meta-list-item">
-                            <span class="meta-list-label">Tüüp:</span>
-                            <span class="meta-list-value"><?php echo esc_html($project_type); ?></span>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($project_units) : ?>
-                        <div class="meta-list-item">
-                            <span class="meta-list-label">Ühikuid:</span>
-                            <span class="meta-list-value"><?php echo esc_html($project_units); ?></span>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($project_area) : ?>
-                        <div class="meta-list-item">
-                            <span class="meta-list-label">Pindala:</span>
-                            <span class="meta-list-value"><?php echo esc_html($project_area); ?></span>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-</section>
+
 
 <!-- Related Projects -->
 <?php

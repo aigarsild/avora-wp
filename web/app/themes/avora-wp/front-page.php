@@ -84,9 +84,10 @@
                 <div class="feature-text">
                     <h2>Kvaliteet ja täpsus igas detailis</h2>
                     <p>Tuginedes kvaliteetsetele materjalidele ja uuenduslikele ehitusviisidele, loome kodusid, mis ei kesta vaid aastaid, vaid aastakümneid - läbi põlvkondade.</p>
-                    <div class="feature-buttons" style="display: none;">
-                        <button class="btn btn-primary">Vaata galeriid</button>
-                        <button class="btn btn-outline">Loe edasi</button>
+                    <div class="feature-buttons">
+                        <a href="<?php echo home_url('/meist'); ?>" class="btn btn-outline-accent">
+                            Loe meist rohkem
+                        </a>
                     </div>
                 </div>
             </div>
