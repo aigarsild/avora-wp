@@ -729,7 +729,8 @@ input, textarea, select {
     overflow: hidden;
     padding-top: 0;
     margin-top: 0;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
 }
 
 .project-header.hero .hero-content {
