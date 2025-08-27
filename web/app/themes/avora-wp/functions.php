@@ -112,6 +112,22 @@ add_action('admin_enqueue_scripts', function($hook) {
             wp_enqueue_style('project-admin-styles', get_template_directory_uri() . '/admin-styles.css', array(), '1.0.0');
         }
     }
+
+    // Enable drag-and-drop ordering on Projects list screen
+    if ($hook === 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] === 'project') {
+        wp_enqueue_script('jquery-ui-sortable');
+        wp_enqueue_script(
+            'project-ordering',
+            get_template_directory_uri() . '/admin-project-order.js',
+            array('jquery', 'jquery-ui-sortable'),
+            '1.0.0',
+            true
+        );
+        wp_localize_script('project-ordering', 'AvoraOrder', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('avora_update_project_order')
+        ));
+    }
 });
 
 // Enable SVG uploads
@@ -761,4 +777,41 @@ if (wp_get_environment_type() === 'production') {
 // Disable core block patterns
 add_action('after_setup_theme', function() {
     remove_theme_support('core-block-patterns');
+});
+
+// Save drag-and-drop ordering (menu_order) for Projects
+add_action('wp_ajax_avora_update_project_order', function() {
+    check_ajax_referer('avora_update_project_order', 'nonce');
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error('Insufficient permissions');
+    }
+
+    $order = isset($_POST['order']) && is_array($_POST['order']) ? array_map('intval', $_POST['order']) : array();
+    if (empty($order)) {
+        wp_send_json_error('No order received');
+    }
+
+    // Set incremental menu_order starting from 0
+    $position = 0;
+    foreach ($order as $post_id) {
+        wp_update_post(array(
+            'ID' => $post_id,
+            'menu_order' => $position
+        ));
+        $position++;
+    }
+
+    wp_send_json_success('Order updated');
+});
+
+// Default admin list ordering for Projects by menu_order ASC
+add_action('pre_get_posts', function($query) {
+    if (!is_admin() || !$query->is_main_query()) {
+        return;
+    }
+    $post_type = $query->get('post_type');
+    if ($post_type === 'project' && empty($_GET['orderby'])) {
+        $query->set('orderby', 'menu_order');
+        $query->set('order', 'ASC');
+    }
 });
