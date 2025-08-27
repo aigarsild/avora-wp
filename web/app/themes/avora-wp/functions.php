@@ -53,7 +53,7 @@ add_action('wp_enqueue_scripts', function () {
                 wp_enqueue_style(
                     'avora-wp-styles', 
                     $asset_uri, 
-                    ['wp-block-library'], // Load after WordPress default styles so we can override
+                    [], // No dependencies since we're removing default styles
                     filemtime($asset),
                     'all'
                 );
@@ -195,7 +195,7 @@ add_action('init', function() {
         'has_archive' => false,
         'rewrite' => ['slug' => 'projekt'],
         'menu_icon' => 'dashicons-building',
-        'supports' => ['title', 'editor', 'thumbnail', 'excerpt'],
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'page-attributes'],
         'show_in_rest' => true,
         'menu_position' => 20
     ]);
@@ -732,22 +732,31 @@ add_action('init', function() {
 
 // Remove WordPress default block styles that conflict with theme
 add_action('wp_enqueue_scripts', function() {
-    // Remove WordPress default styles that can conflict with theme
-    wp_dequeue_style('wp-block-library');
-    wp_dequeue_style('wp-block-library-theme');
-    wp_dequeue_style('classic-theme-styles');
-    wp_dequeue_style('global-styles');
-    
-    // Also deregister to prevent them from loading
-    wp_deregister_style('wp-block-library');
-    wp_deregister_style('wp-block-library-theme');
-    wp_deregister_style('classic-theme-styles');
-    wp_deregister_style('global-styles');
+    // Only remove conflicting styles in production, be gentler in development
+    if (wp_get_environment_type() === 'production') {
+        // Remove WordPress default styles that can conflict with theme
+        wp_dequeue_style('wp-block-library');
+        wp_dequeue_style('wp-block-library-theme');
+        wp_dequeue_style('classic-theme-styles');
+        wp_dequeue_style('global-styles');
+        
+        // Also deregister to prevent them from loading
+        wp_deregister_style('wp-block-library');
+        wp_deregister_style('wp-block-library-theme');
+        wp_deregister_style('classic-theme-styles');
+        wp_deregister_style('global-styles');
+    } else {
+        // In development, just dequeue but don't deregister
+        wp_dequeue_style('classic-theme-styles');
+        wp_dequeue_style('global-styles');
+    }
 }, 100);
 
-// Remove global styles completely
-remove_action('wp_enqueue_scripts', 'wp_enqueue_global_styles');
-remove_action('wp_footer', 'wp_enqueue_global_styles', 1);
+// Remove global styles completely (only in production)
+if (wp_get_environment_type() === 'production') {
+    remove_action('wp_enqueue_scripts', 'wp_enqueue_global_styles');
+    remove_action('wp_footer', 'wp_enqueue_global_styles', 1);
+}
 
 // Disable core block patterns
 add_action('after_setup_theme', function() {

@@ -28,3 +28,4 @@ Config::define('WP_POST_REVISIONS', 3); // Limit revisions to save database spac
 Config::define('XMLRPC_ENABLED', false);
 
 
+

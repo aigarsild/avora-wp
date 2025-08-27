@@ -19,7 +19,8 @@
         $projects = get_posts([
             'post_type' => 'project',
             'posts_per_page' => -1,
-            'meta_key' => '_thumbnail_id'
+            'meta_key' => '_thumbnail_id',
+            'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC']
         ]);
         
         if ($projects) : ?>

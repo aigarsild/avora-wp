@@ -107,8 +107,7 @@
                 'post_type' => 'project',
                 'posts_per_page' => 3,
                 'meta_key' => '_thumbnail_id',
-                'orderby' => 'date',
-                'order' => 'DESC'
+                'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC']
             ]);
             
             if ($featured_projects) : ?>

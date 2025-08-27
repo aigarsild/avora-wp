@@ -98,3 +98,4 @@ if [ $count -gt 0 ]; then
 else
     echo "❌ No images found to process"
 fi
+
