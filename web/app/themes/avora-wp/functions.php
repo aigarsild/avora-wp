@@ -499,7 +499,7 @@ function about_content_blocks_callback($post) {
     
     echo '</div>';
     
-    echo '<input type="hidden" id="about_content_blocks_data" name="about_content_blocks_data" value="' . esc_attr(json_encode($content_blocks)) . '" />';
+    echo '<input type="hidden" id="about_content_blocks_data" name="about_content_blocks_data" value="' . esc_attr(json_encode($content_blocks, JSON_UNESCAPED_UNICODE)) . '" />';
     echo '</div>';
     
     // Add template for new blocks
@@ -557,8 +557,44 @@ function echo_content_block_html($index, $block) {
     // Content
     echo '<tr><th scope="row"><label>Sisu</label></th>';
     echo '<td>';
-    echo '<textarea class="block-content large-text" rows="8" placeholder="Sisesta ploki sisu...">' . esc_textarea($content) . '</textarea>';
-    echo '<p class="description">Sisesta ploki sisu. Saad kasutada HTML-i vorminduseks.</p>';
+    
+    // Use wp_editor for real blocks, textarea for template
+    if (is_numeric($index)) {
+        // Real block - use wp_editor
+        $editor_id = 'block_content_' . $index;
+        wp_editor($content, $editor_id, [
+            'textarea_name' => 'block_content_' . $index,
+            'textarea_rows' => 8,
+            'media_buttons' => true,
+            'teeny' => false,
+            'editor_class' => 'block-content-editor',
+            'tinymce' => [
+                'toolbar1' => 'bold,italic,underline,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,fullscreen,wp_adv',
+                'toolbar2' => 'formatselect,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
+                'forced_root_block' => 'p',
+                'force_br_newlines' => false,
+                'force_p_newlines' => true,
+                'setup' => 'function(editor) {
+                    editor.on("keydown", function(e) {
+                        if (e.keyCode === 13 && !e.shiftKey) {
+                            e.preventDefault();
+                            editor.insertContent("<p>&nbsp;</p><p></p>");
+                            var node = editor.getBody().lastChild;
+                            if (node && node.nodeName === "P") {
+                                editor.selection.setCursorLocation(node, 0);
+                            }
+                        }
+                    });
+                }'
+            ],
+            'quicktags' => true
+        ]);
+    } else {
+        // Template - use textarea that will be replaced by TinyMCE later
+        echo '<textarea class="block-content large-text" rows="8" placeholder="Sisesta ploki sisu...">' . esc_textarea($content) . '</textarea>';
+    }
+    
+    echo '<p class="description">Sisesta ploki sisu. Saad kasutada rikkalikku tekstitoimturit vorminduseks.</p>';
     echo '</td></tr>';
     
     echo '</table>';
@@ -776,25 +812,43 @@ add_action('save_post', function($post_id) {
             wp_verify_nonce($_POST['about_content_blocks_nonce_field'], 'about_content_blocks_nonce') &&
             $post->post_name === 'meist') {
             
-            if (isset($_POST['about_content_blocks_data'])) {
-                $blocks_data = $_POST['about_content_blocks_data'];
-                $decoded_blocks = json_decode(stripslashes($blocks_data), true);
-                
+            // Try to get data from JSON first (for JavaScript-managed blocks)
+            $blocks_data = [];
+            if (isset($_POST['about_content_blocks_data']) && !empty($_POST['about_content_blocks_data'])) {
+                $decoded_blocks = json_decode(stripslashes($_POST['about_content_blocks_data']), true);
                 if (is_array($decoded_blocks)) {
-                    // Sanitize each block
-                    $sanitized_blocks = [];
-                    foreach ($decoded_blocks as $block) {
-                        $sanitized_blocks[] = [
-                            'title' => sanitize_text_field($block['title'] ?? ''),
-                            'content' => wp_kses_post($block['content'] ?? ''),
-                            'image' => esc_url_raw($block['image'] ?? ''),
-                            'image_position' => in_array($block['image_position'] ?? 'left', ['left', 'right']) ? $block['image_position'] : 'left'
-                        ];
-                    }
-                    update_post_meta($post_id, 'about_content_blocks', json_encode($sanitized_blocks));
-                } else {
-                    update_post_meta($post_id, 'about_content_blocks', '');
+                    $blocks_data = $decoded_blocks;
                 }
+            }
+            
+            // Also check for individual wp_editor fields (for existing blocks)
+            $index = 0;
+            while (isset($_POST['block_content_' . $index])) {
+                // If we don't have this block in JSON data, try to reconstruct it
+                if (!isset($blocks_data[$index])) {
+                    $blocks_data[$index] = [];
+                }
+                
+                // Update content from wp_editor field
+                $blocks_data[$index]['content'] = wp_kses_post($_POST['block_content_' . $index]);
+                
+                $index++;
+            }
+            
+            if (!empty($blocks_data)) {
+                // Sanitize each block
+                $sanitized_blocks = [];
+                foreach ($blocks_data as $block) {
+                    $sanitized_blocks[] = [
+                        'title' => sanitize_text_field($block['title'] ?? ''),
+                        'content' => wp_kses_post($block['content'] ?? ''),
+                        'image' => esc_url_raw($block['image'] ?? ''),
+                        'image_position' => in_array($block['image_position'] ?? 'left', ['left', 'right']) ? $block['image_position'] : 'left'
+                    ];
+                }
+                update_post_meta($post_id, 'about_content_blocks', json_encode($sanitized_blocks, JSON_UNESCAPED_UNICODE));
+            } else {
+                update_post_meta($post_id, 'about_content_blocks', '');
             }
         }
         

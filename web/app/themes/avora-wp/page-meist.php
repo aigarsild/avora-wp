@@ -77,7 +77,19 @@ get_header(); ?>
                             <?php endif; ?>
                             <?php if (!empty($block['content'])): ?>
                                 <div class="block-content">
-                                    <?php echo wp_kses_post(wpautop($block['content'])); ?>
+                                    <?php 
+                                    // Process content from TinyMCE editor
+                                    $content = $block['content'];
+                                    
+                                    // Check if content has paragraph tags already (from TinyMCE)
+                                    if (strpos($content, '<p>') !== false || strpos($content, '<br') !== false) {
+                                        // Content already has HTML formatting from TinyMCE
+                                        echo wp_kses_post($content);
+                                    } else {
+                                        // Plain text content - convert line breaks to paragraphs
+                                        echo wp_kses_post(wpautop($content));
+                                    }
+                                    ?>
                                 </div>
                             <?php endif; ?>
                         </div>

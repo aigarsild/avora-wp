@@ -2476,12 +2476,20 @@ input, textarea, select {
     background: var(--bg-primary);
 }
 
+.feature-content.reverse {
+    grid-template-columns: 1fr auto;
+    justify-items: end;
+}
+
 .feature-content.reverse .feature-image {
     order: 2;
+    justify-self: end;
 }
 
 .feature-content.reverse .feature-text {
     order: 1;
+    justify-self: start;
+    max-width: 60%;
 }
 
 .block-content {

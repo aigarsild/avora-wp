@@ -11,6 +11,51 @@ jQuery(document).ready(function($) {
         
         $('#content-blocks-container').append(blockHtml);
         
+        // Initialize TinyMCE for the new textarea
+        let newTextarea = $('#content-blocks-container .content-block:last .block-content');
+        if (newTextarea.length && typeof tinymce !== 'undefined') {
+            let editorId = 'block_content_' + blockIndex;
+            newTextarea.attr('id', editorId);
+            
+            // Initialize TinyMCE
+            tinymce.init({
+                selector: '#' + editorId,
+                height: 200,
+                menubar: false,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }',
+                forced_root_block: 'p',
+                force_br_newlines: false,
+                force_p_newlines: true,
+                setup: function(editor) {
+                    editor.on('change', function() {
+                        updateBlocksData();
+                    });
+                    
+                    // Add custom Enter key behavior
+                    editor.on('keydown', function(e) {
+                        if (e.keyCode === 13 && !e.shiftKey) { // Enter key (not Shift+Enter)
+                            e.preventDefault();
+                            
+                            // Insert empty paragraph for spacing
+                            editor.insertContent('<p>&nbsp;</p><p></p>');
+                            
+                            // Move cursor to the empty paragraph
+                            var node = editor.getBody().lastChild;
+                            if (node && node.nodeName === 'P') {
+                                editor.selection.setCursorLocation(node, 0);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
         // Update radio button names for the new block
         updateRadioButtonNames();
         
@@ -23,7 +68,19 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         
         if (confirm('Kas oled kindel, et tahad selle sisuploki eemaldada?')) {
-            $(this).closest('.content-block').remove();
+            let blockToRemove = $(this).closest('.content-block');
+            let textarea = blockToRemove.find('.block-content');
+            
+            // Remove TinyMCE instance if it exists
+            if (textarea.length && textarea.attr('id') && typeof tinymce !== 'undefined') {
+                let editorId = textarea.attr('id');
+                let editor = tinymce.get(editorId);
+                if (editor) {
+                    editor.remove();
+                }
+            }
+            
+            blockToRemove.remove();
             updateBlockNumbers();
             updateRadioButtonNames();
             updateBlocksData();
@@ -104,9 +161,24 @@ jQuery(document).ready(function($) {
         
         $('.content-block').each(function() {
             let block = $(this);
+            let contentElement = block.find('.block-content');
+            let content = '';
+            
+            // Get content from TinyMCE if it exists, otherwise from textarea
+            if (contentElement.attr('id') && typeof tinymce !== 'undefined') {
+                let editor = tinymce.get(contentElement.attr('id'));
+                if (editor) {
+                    content = editor.getContent();
+                } else {
+                    content = contentElement.val() || '';
+                }
+            } else {
+                content = contentElement.val() || '';
+            }
+            
             let blockData = {
                 title: block.find('.block-title').val() || '',
-                content: block.find('.block-content').val() || '',
+                content: content,
                 image: block.find('.block-image').val() || '',
                 image_position: block.find('.block-image-position:checked').val() || 'left'
             };
@@ -116,7 +188,28 @@ jQuery(document).ready(function($) {
         $('#about_content_blocks_data').val(JSON.stringify(blocks));
     }
     
+    // Initialize TinyMCE change listeners for existing editors
+    function initializeExistingEditors() {
+        if (typeof tinymce !== 'undefined') {
+            // Wait a bit for TinyMCE to initialize
+            setTimeout(function() {
+                $('.content-block').each(function() {
+                    let contentElement = $(this).find('.block-content');
+                    if (contentElement.attr('id')) {
+                        let editor = tinymce.get(contentElement.attr('id'));
+                        if (editor) {
+                            editor.on('change keyup', function() {
+                                updateBlocksData();
+                            });
+                        }
+                    }
+                });
+            }, 1000);
+        }
+    }
+    
     // Initialize data on page load
     updateRadioButtonNames();
     updateBlocksData();
+    initializeExistingEditors();
 });
