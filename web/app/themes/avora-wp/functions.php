@@ -102,13 +102,25 @@ add_action('init', function() {
 
 // Enqueue media uploader scripts in admin
 add_action('admin_enqueue_scripts', function($hook) {
-    global $post_type;
+    global $post_type, $post;
     
     if ($hook == 'post-new.php' || $hook == 'post.php') {
         if ($post_type == 'project') {
             wp_enqueue_media();
             wp_enqueue_script('jquery-ui-sortable');
             wp_enqueue_script('project-media-uploader', get_template_directory_uri() . '/admin-media.js', array('jquery', 'jquery-ui-sortable'), '1.0.0', true);
+            wp_enqueue_style('project-admin-styles', get_template_directory_uri() . '/admin-styles.css', array(), '1.0.0');
+        }
+        
+        // Enqueue for About Us page
+        if ($post_type == 'page' && $post && $post->post_name === 'meist') {
+            wp_enqueue_media();
+            wp_enqueue_script('about-page-admin', get_template_directory_uri() . '/admin-about.js', array('jquery'), '1.0.0', true);
+            wp_enqueue_style('project-admin-styles', get_template_directory_uri() . '/admin-styles.css', array(), '1.0.0');
+        }
+        
+        // Enqueue for Contact page (admin styles only)
+        if ($post_type == 'page' && $post && $post->post_name === 'kontakt') {
             wp_enqueue_style('project-admin-styles', get_template_directory_uri() . '/admin-styles.css', array(), '1.0.0');
         }
     }
@@ -257,6 +269,58 @@ add_action('add_meta_boxes', function() {
         'normal',
         'high'
     );
+    
+    // Add About Us page meta boxes (only for page with slug 'meist')
+    global $post;
+    if ($post && $post->post_name === 'meist') {
+        add_meta_box(
+            'about_page_header',
+            'Meist lehe päis',
+            'about_page_header_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        
+        add_meta_box(
+            'about_page_values',
+            'Meie väärtused sektsiooni',
+            'about_page_values_callback',
+            'page',
+            'normal',
+            'high'
+        );
+    }
+    
+    // Add Contact page meta boxes (only for page with slug 'kontakt')
+    if ($post && $post->post_name === 'kontakt') {
+        add_meta_box(
+            'contact_page_header',
+            'Kontakti lehe päis',
+            'contact_page_header_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        
+        add_meta_box(
+            'contact_company_info',
+            'Ettevõtte informatsioon',
+            'contact_company_info_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        
+        add_meta_box(
+            'contact_form_settings',
+            'Kontaktvormi seaded',
+            'contact_form_settings_callback',
+            'page',
+            'normal',
+            'high'
+        );
+    }
 });
 
 function project_details_callback($post) {
@@ -313,6 +377,206 @@ function project_details_callback($post) {
     echo '</table>';
 }
 
+// About Us page header callback
+function about_page_header_callback($post) {
+    wp_nonce_field('about_page_header_nonce', 'about_page_header_nonce_field');
+    
+    $page_title = get_post_meta($post->ID, 'about_page_title', true);
+    $page_description = get_post_meta($post->ID, 'about_page_description', true);
+    
+    // Use defaults if empty
+    if (empty($page_title)) {
+        $page_title = 'Meist';
+    }
+    if (empty($page_description)) {
+        $page_description = 'AVORA on Eesti kapitalil põhinev kinnisvaraarendus ettevõte, mis loob tuleviku kodusid täna.';
+    }
+    
+    echo '<table class="form-table">';
+    echo '<tr><th scope="row"><label for="about_page_title">Lehe pealkiri</label></th>';
+    echo '<td><input type="text" id="about_page_title" name="about_page_title" value="' . esc_attr($page_title) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="about_page_description">Lehe kirjeldus</label></th>';
+    echo '<td><textarea id="about_page_description" name="about_page_description" rows="3" class="large-text">' . esc_textarea($page_description) . '</textarea></td></tr>';
+    
+    echo '</table>';
+}
+
+// About Us page values section callback
+function about_page_values_callback($post) {
+    wp_nonce_field('about_page_values_nonce', 'about_page_values_nonce_field');
+    
+    $values_title = get_post_meta($post->ID, 'about_values_title', true);
+    $values_image = get_post_meta($post->ID, 'about_values_image', true);
+    $values_content = get_post_meta($post->ID, 'about_values_content', true);
+    
+    // Use defaults if empty
+    if (empty($values_title)) {
+        $values_title = 'Meie väärtused';
+    }
+    if (empty($values_content)) {
+        $values_content = '<ul class="text-lg">
+    <li class="mb-4"><strong>Kvaliteet:</strong> Kasutame ainult parimaid materjale ja töötame tunnustatud partneritega.</li>
+    <li class="mb-4"><strong>Täpsus:</strong> Iga detail on läbi mõeldud ja hoolikalt teostatud.</li>
+    <li class="mb-4"><strong>Jätkusuutlikkus:</strong> Ehitame kodusid, mis kestavad põlvkondade vältel.</li>
+    <li class="mb-4"><strong>Innovatsioon:</strong> Kasutame uuenduslikke ehitusmeetodeid ja lahendusi.</li>
+</ul>';
+    }
+    
+    echo '<table class="form-table">';
+    echo '<tr><th scope="row"><label for="about_values_title">Sektsiooni pealkiri</label></th>';
+    echo '<td><input type="text" id="about_values_title" name="about_values_title" value="' . esc_attr($values_title) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="about_values_image">Sektsiooni pilt</label></th>';
+    echo '<td>';
+    echo '<div class="about-values-image-upload">';
+    echo '<input type="hidden" id="about_values_image" name="about_values_image" value="' . esc_attr($values_image) . '" />';
+    echo '<div class="image-preview">';
+    if (!empty($values_image)) {
+        echo '<img src="' . esc_url($values_image) . '" alt="Väärtuste sektsiooni pilt" style="max-width: 200px; height: auto; margin-bottom: 10px; display: block;" />';
+    }
+    echo '</div>';
+    echo '<button type="button" class="button values-image-upload-btn">Vali pilt</button> ';
+    echo '<button type="button" class="button values-image-remove-btn" style="' . (empty($values_image) ? 'display:none;' : '') . '">Eemalda pilt</button>';
+    echo '<p class="description">Vali väärtuste sektsiooni pilt. Kui pilt puudub, kuvatakse vaikimisi pilt.</p>';
+    echo '</div>';
+    echo '</td></tr>';
+    
+    echo '<tr><th scope="row" style="vertical-align: top; padding-top: 20px;"><label for="about_values_content">Sektsiooni sisu</label></th>';
+    echo '<td>';
+    
+    // Use WordPress editor for the content
+    $editor_settings = array(
+        'textarea_name' => 'about_values_content',
+        'textarea_rows' => 15,
+        'media_buttons' => true,
+        'teeny' => false,
+        'tinymce' => array(
+            'toolbar1' => 'formatselect,bold,italic,underline,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,wp_fullscreen,wp_adv',
+            'toolbar2' => 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help'
+        ),
+        'quicktags' => true
+    );
+    
+    wp_editor($values_content, 'about_values_content', $editor_settings);
+    
+    echo '<p class="description">Kasutage redaktorit väärtuste sektsiooni sisu muutmiseks. Saate kasutada nimekirju, rõhutamist ja muid vormindusi.</p>';
+    echo '</td></tr>';
+    
+    echo '</table>';
+}
+
+// Contact page header callback
+function contact_page_header_callback($post) {
+    wp_nonce_field('contact_page_header_nonce', 'contact_page_header_nonce_field');
+    
+    $page_title = get_post_meta($post->ID, 'contact_page_title', true);
+    $page_description = get_post_meta($post->ID, 'contact_page_description', true);
+    
+    // Use defaults if empty
+    if (empty($page_title)) {
+        $page_title = 'Kontakt';
+    }
+    if (empty($page_description)) {
+        $page_description = 'Võtke meiega ühendust, et arutada oma kinnisvaraprojekti või saada rohkem informatsiooni meie teenuste kohta.';
+    }
+    
+    echo '<table class="form-table">';
+    echo '<tr><th scope="row"><label for="contact_page_title">Lehe pealkiri</label></th>';
+    echo '<td><input type="text" id="contact_page_title" name="contact_page_title" value="' . esc_attr($page_title) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="contact_page_description">Lehe kirjeldus</label></th>';
+    echo '<td><textarea id="contact_page_description" name="contact_page_description" rows="3" class="large-text">' . esc_textarea($page_description) . '</textarea></td></tr>';
+    
+    echo '</table>';
+}
+
+// Contact company info callback
+function contact_company_info_callback($post) {
+    wp_nonce_field('contact_company_info_nonce', 'contact_company_info_nonce_field');
+    
+    $company_name = get_post_meta($post->ID, 'contact_company_name', true);
+    $company_registry_code = get_post_meta($post->ID, 'contact_company_registry_code', true);
+    $company_economic_reg = get_post_meta($post->ID, 'contact_company_economic_reg', true);
+    $company_vat_reg = get_post_meta($post->ID, 'contact_company_vat_reg', true);
+    $company_address = get_post_meta($post->ID, 'contact_company_address', true);
+    
+    // Use defaults if empty
+    if (empty($company_name)) {
+        $company_name = 'Avora Capital OÜ';
+    }
+    if (empty($company_registry_code)) {
+        $company_registry_code = '16741810';
+    }
+    if (empty($company_economic_reg)) {
+        $company_economic_reg = 'EEH013730';
+    }
+    if (empty($company_vat_reg)) {
+        $company_vat_reg = 'EE102691281';
+    }
+    if (empty($company_address)) {
+        $company_address = "Tartu mnt 84a,\nKesklinna linnaosa, Tallinn\nHarju maakond, 10112";
+    }
+    
+    echo '<table class="form-table">';
+    echo '<tr><th scope="row"><label for="contact_company_name">Ettevõtte nimi</label></th>';
+    echo '<td><input type="text" id="contact_company_name" name="contact_company_name" value="' . esc_attr($company_name) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="contact_company_registry_code">Registrikood</label></th>';
+    echo '<td><input type="text" id="contact_company_registry_code" name="contact_company_registry_code" value="' . esc_attr($company_registry_code) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="contact_company_economic_reg">Majandustegevuse reg</label></th>';
+    echo '<td><input type="text" id="contact_company_economic_reg" name="contact_company_economic_reg" value="' . esc_attr($company_economic_reg) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="contact_company_vat_reg">KMKR</label></th>';
+    echo '<td><input type="text" id="contact_company_vat_reg" name="contact_company_vat_reg" value="' . esc_attr($company_vat_reg) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="contact_company_address">Aadress</label></th>';
+    echo '<td><textarea id="contact_company_address" name="contact_company_address" rows="4" class="large-text">' . esc_textarea($company_address) . '</textarea></td></tr>';
+    
+    echo '</table>';
+}
+
+// Contact form settings callback
+function contact_form_settings_callback($post) {
+    wp_nonce_field('contact_form_settings_nonce', 'contact_form_settings_nonce_field');
+    
+    $form_title = get_post_meta($post->ID, 'contact_form_title', true);
+    $form_email = get_post_meta($post->ID, 'contact_form_email', true);
+    $form_success_message = get_post_meta($post->ID, 'contact_form_success_message', true);
+    $form_error_message = get_post_meta($post->ID, 'contact_form_error_message', true);
+    
+    // Use defaults if empty
+    if (empty($form_title)) {
+        $form_title = 'Saada sõnum';
+    }
+    if (empty($form_email)) {
+        $form_email = 'info@avora.ee';
+    }
+    if (empty($form_success_message)) {
+        $form_success_message = 'Täname! Teie sõnum on edukalt saadetud. Võtame teiega peagi ühendust.';
+    }
+    if (empty($form_error_message)) {
+        $form_error_message = 'Vabandust, sõnumi saatmisel tekkis viga. Palun proovige uuesti või võtke meiega otse ühendust.';
+    }
+    
+    echo '<table class="form-table">';
+    echo '<tr><th scope="row"><label for="contact_form_title">Vormi pealkiri</label></th>';
+    echo '<td><input type="text" id="contact_form_title" name="contact_form_title" value="' . esc_attr($form_title) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="contact_form_email">Vastuvõtja email</label></th>';
+    echo '<td><input type="email" id="contact_form_email" name="contact_form_email" value="' . esc_attr($form_email) . '" class="regular-text" />';
+    echo '<p class="description">Email aadress, kuhu kontaktvormi sõnumid saadetakse.</p></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="contact_form_success_message">Edukas saatmine sõnum</label></th>';
+    echo '<td><textarea id="contact_form_success_message" name="contact_form_success_message" rows="2" class="large-text">' . esc_textarea($form_success_message) . '</textarea></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="contact_form_error_message">Vea sõnum</label></th>';
+    echo '<td><textarea id="contact_form_error_message" name="contact_form_error_message" rows="2" class="large-text">' . esc_textarea($form_error_message) . '</textarea></td></tr>';
+    
+    echo '</table>';
+}
+
 // Gallery management callback
 function project_gallery_callback($post) {
     wp_nonce_field('project_gallery_nonce', 'project_gallery_nonce_field');
@@ -346,15 +610,7 @@ function project_gallery_callback($post) {
 
 // Save custom meta fields
 add_action('save_post', function($post_id) {
-    if (!isset($_POST['project_details_nonce_field']) || !wp_verify_nonce($_POST['project_details_nonce_field'], 'project_details_nonce')) {
-        return;
-    }
-    
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
-    }
-    
-    if (get_post_type($post_id) !== 'project') {
         return;
     }
     
@@ -362,18 +618,112 @@ add_action('save_post', function($post_id) {
         return;
     }
     
-    $fields = ['project_status', 'project_location', 'project_year', 'project_type', 'project_units', 'project_area', 'project_logo'];
-    
-    foreach ($fields as $field) {
-        if (isset($_POST[$field])) {
-            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+    // Save project meta fields
+    if (get_post_type($post_id) === 'project' && 
+        isset($_POST['project_details_nonce_field']) && 
+        wp_verify_nonce($_POST['project_details_nonce_field'], 'project_details_nonce')) {
+        
+        $fields = ['project_status', 'project_location', 'project_year', 'project_type', 'project_units', 'project_area', 'project_logo'];
+        
+        foreach ($fields as $field) {
+            if (isset($_POST[$field])) {
+                update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+            }
+        }
+        
+        // Save gallery images
+        if (isset($_POST['project_gallery_images'])) {
+            $gallery_images = sanitize_text_field($_POST['project_gallery_images']);
+            update_post_meta($post_id, 'project_gallery_images', $gallery_images);
         }
     }
     
-    // Save gallery images
-    if (isset($_POST['project_gallery_images'])) {
-        $gallery_images = sanitize_text_field($_POST['project_gallery_images']);
-        update_post_meta($post_id, 'project_gallery_images', $gallery_images);
+    // Save About Us page meta fields
+    if (get_post_type($post_id) === 'page') {
+        $post = get_post($post_id);
+        
+        // Save header fields
+        if (isset($_POST['about_page_header_nonce_field']) && 
+            wp_verify_nonce($_POST['about_page_header_nonce_field'], 'about_page_header_nonce') &&
+            $post->post_name === 'meist') {
+            
+            if (isset($_POST['about_page_title'])) {
+                update_post_meta($post_id, 'about_page_title', sanitize_text_field($_POST['about_page_title']));
+            }
+            if (isset($_POST['about_page_description'])) {
+                update_post_meta($post_id, 'about_page_description', sanitize_textarea_field($_POST['about_page_description']));
+            }
+        }
+        
+        // Save About Us values fields
+        if (isset($_POST['about_page_values_nonce_field']) && 
+            wp_verify_nonce($_POST['about_page_values_nonce_field'], 'about_page_values_nonce') &&
+            $post->post_name === 'meist') {
+            
+            if (isset($_POST['about_values_title'])) {
+                update_post_meta($post_id, 'about_values_title', sanitize_text_field($_POST['about_values_title']));
+            }
+            if (isset($_POST['about_values_image'])) {
+                update_post_meta($post_id, 'about_values_image', sanitize_text_field($_POST['about_values_image']));
+            }
+            if (isset($_POST['about_values_content'])) {
+                // Use wp_kses_post to allow safe HTML content from the editor
+                update_post_meta($post_id, 'about_values_content', wp_kses_post($_POST['about_values_content']));
+            }
+        }
+        
+        // Save Contact page header fields
+        if (isset($_POST['contact_page_header_nonce_field']) && 
+            wp_verify_nonce($_POST['contact_page_header_nonce_field'], 'contact_page_header_nonce') &&
+            $post->post_name === 'kontakt') {
+            
+            if (isset($_POST['contact_page_title'])) {
+                update_post_meta($post_id, 'contact_page_title', sanitize_text_field($_POST['contact_page_title']));
+            }
+            if (isset($_POST['contact_page_description'])) {
+                update_post_meta($post_id, 'contact_page_description', sanitize_textarea_field($_POST['contact_page_description']));
+            }
+        }
+        
+        // Save Contact company info fields
+        if (isset($_POST['contact_company_info_nonce_field']) && 
+            wp_verify_nonce($_POST['contact_company_info_nonce_field'], 'contact_company_info_nonce') &&
+            $post->post_name === 'kontakt') {
+            
+            $company_fields = [
+                'contact_company_name', 'contact_company_registry_code', 
+                'contact_company_economic_reg', 'contact_company_vat_reg'
+            ];
+            
+            foreach ($company_fields as $field) {
+                if (isset($_POST[$field])) {
+                    update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+                }
+            }
+            
+            if (isset($_POST['contact_company_address'])) {
+                update_post_meta($post_id, 'contact_company_address', sanitize_textarea_field($_POST['contact_company_address']));
+            }
+        }
+        
+        // Save Contact form settings fields
+        if (isset($_POST['contact_form_settings_nonce_field']) && 
+            wp_verify_nonce($_POST['contact_form_settings_nonce_field'], 'contact_form_settings_nonce') &&
+            $post->post_name === 'kontakt') {
+            
+            if (isset($_POST['contact_form_title'])) {
+                update_post_meta($post_id, 'contact_form_title', sanitize_text_field($_POST['contact_form_title']));
+            }
+            if (isset($_POST['contact_form_email'])) {
+                update_post_meta($post_id, 'contact_form_email', sanitize_email($_POST['contact_form_email']));
+            }
+            if (isset($_POST['contact_form_success_message'])) {
+                update_post_meta($post_id, 'contact_form_success_message', sanitize_textarea_field($_POST['contact_form_success_message']));
+            }
+            if (isset($_POST['contact_form_error_message'])) {
+                update_post_meta($post_id, 'contact_form_error_message', sanitize_textarea_field($_POST['contact_form_error_message']));
+            }
+        }
     }
 });
 
@@ -396,9 +746,15 @@ if (!function_exists('update_field')) {
     }
 }
 
-// Auto-create projects on theme activation
+// Auto-create projects and pages on theme activation
 add_action('after_switch_theme', 'avora_create_projects');
 add_action('init', 'avora_create_projects'); // Also run on init for existing installations
+
+// Create About Us and Contact pages if they don't exist
+add_action('after_switch_theme', 'avora_create_about_page');
+add_action('init', 'avora_create_about_page');
+add_action('after_switch_theme', 'avora_create_contact_page');
+add_action('init', 'avora_create_contact_page');
 
 function avora_create_projects() {
     // Create Manni project
@@ -721,6 +1077,82 @@ function avora_upload_project_images($project_id, $image_files, $project_name) {
     flush_rewrite_rules();
 }
 
+// Create About Us page function
+function avora_create_about_page() {
+    // Only run once
+    if (get_option('avora_about_page_created')) {
+        return;
+    }
+    
+    // Check if About Us page already exists
+    $existing = get_posts([
+        'post_type' => 'page',
+        'name' => 'meist',
+        'posts_per_page' => 1,
+        'post_status' => 'any'
+    ]);
+    
+    if ($existing) {
+        update_option('avora_about_page_created', true);
+        return;
+    }
+    
+    // Create the About Us page
+    $page_data = [
+        'post_title' => 'Meist',
+        'post_name' => 'meist',
+        'post_content' => 'Lisasisu saate lisada siia WordPressi redaktoris. Ülalolev päis ja väärtuste sektsioon on hallatav läbi kohandatud väljade.',
+        'post_status' => 'publish',
+        'post_type' => 'page',
+        'post_author' => 1
+    ];
+    
+    $page_id = wp_insert_post($page_data);
+    
+    if (!is_wp_error($page_id)) {
+        // Mark as created
+        update_option('avora_about_page_created', true);
+    }
+}
+
+// Create Contact page function
+function avora_create_contact_page() {
+    // Only run once
+    if (get_option('avora_contact_page_created')) {
+        return;
+    }
+    
+    // Check if Contact page already exists
+    $existing = get_posts([
+        'post_type' => 'page',
+        'name' => 'kontakt',
+        'posts_per_page' => 1,
+        'post_status' => 'any'
+    ]);
+    
+    if ($existing) {
+        update_option('avora_contact_page_created', true);
+        return;
+    }
+    
+    // Create the Contact page
+    $page_data = [
+        'post_title' => 'Kontakt',
+        'post_name' => 'kontakt',
+        'post_content' => 'Lisasisu saate lisada siia WordPressi redaktoris. Ülalolev päis, ettevõtte informatsioon ja kontaktvorm on hallatav läbi kohandatud väljade.',
+        'post_status' => 'publish',
+        'post_type' => 'page',
+        'post_author' => 1
+    ];
+    
+    $page_id = wp_insert_post($page_data);
+    
+    if (!is_wp_error($page_id)) {
+        // Mark as created
+        update_option('avora_contact_page_created', true);
+    }
+}
+
 // Custom body classes for better styling
 add_filter('body_class', function($classes) {
     $classes[] = 'font-brand';
@@ -815,3 +1247,104 @@ add_action('pre_get_posts', function($query) {
         $query->set('order', 'ASC');
     }
 });
+
+// Handle contact form submission
+add_action('init', function() {
+    if (isset($_POST['avora_contact_form_submit']) && isset($_POST['avora_contact_nonce'])) {
+        avora_handle_contact_form();
+    }
+});
+
+function avora_handle_contact_form() {
+    // Verify nonce for security
+    if (!wp_verify_nonce($_POST['avora_contact_nonce'], 'avora_contact_form')) {
+        wp_die('Security check failed');
+    }
+    
+    // Sanitize and validate form data
+    $name = sanitize_text_field($_POST['name'] ?? '');
+    $email = sanitize_email($_POST['email'] ?? '');
+    $phone = sanitize_text_field($_POST['phone'] ?? '');
+    $message = sanitize_textarea_field($_POST['message'] ?? '');
+    
+    // Validation
+    $errors = [];
+    
+    if (empty($name)) {
+        $errors[] = 'Nimi on kohustuslik väli.';
+    }
+    
+    if (empty($email) || !is_email($email)) {
+        $errors[] = 'Palun sisestage kehtiv email aadress.';
+    }
+    
+    if (empty($message)) {
+        $errors[] = 'Sõnum on kohustuslik väli.';
+    }
+    
+    // Check for spam (simple honeypot and time-based protection)
+    if (!empty($_POST['website'])) { // Honeypot field
+        $errors[] = 'Spam detected.';
+    }
+    
+    if (!empty($errors)) {
+        // Store errors in transient to display
+        $error_key = 'avora_contact_errors_' . wp_generate_password(12, false);
+        set_transient($error_key, $errors, 300);
+        wp_redirect($_POST['_wp_http_referer'] . '?contact_msg=' . $error_key . '#contact-form');
+        exit;
+    }
+    
+    // Get recipient email from page meta or use default
+    $page_id = url_to_postid($_POST['_wp_http_referer']);
+    $recipient_email = get_post_meta($page_id, 'contact_form_email', true);
+    
+    if (empty($recipient_email)) {
+        $recipient_email = 'info@avora.ee';
+    }
+    
+    // Prepare email
+    $subject = 'Uus kontaktsõnum AVORA veebilehelt';
+    $email_message = "Uus kontaktsõnum AVORA veebilehelt:\n\n";
+    $email_message .= "Nimi: {$name}\n";
+    $email_message .= "Email: {$email}\n";
+    
+    if (!empty($phone)) {
+        $email_message .= "Telefon: {$phone}\n";
+    }
+    
+    $email_message .= "\nSõnum:\n{$message}\n\n";
+    $email_message .= "---\n";
+    $email_message .= "Sõnum saadeti: " . date('d.m.Y H:i') . "\n";
+    $email_message .= "IP aadress: " . $_SERVER['REMOTE_ADDR'] . "\n";
+    
+    $headers = [
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: ' . get_bloginfo('name') . ' <noreply@' . parse_url(home_url(), PHP_URL_HOST) . '>',
+        'Reply-To: ' . $name . ' <' . $email . '>'
+    ];
+    
+    // Send email
+    $sent = wp_mail($recipient_email, $subject, $email_message, $headers);
+    
+    if ($sent) {
+        // Success - store success message
+        $success_message = get_post_meta($page_id, 'contact_form_success_message', true);
+        if (empty($success_message)) {
+            $success_message = 'Täname! Teie sõnum on edukalt saadetud. Võtame teiega peagi ühendust.';
+        }
+        $success_key = 'avora_contact_success_' . wp_generate_password(12, false);
+        set_transient($success_key, $success_message, 300);
+        wp_redirect($_POST['_wp_http_referer'] . '?contact_msg=' . $success_key . '#contact-form');
+    } else {
+        // Error - store error message
+        $error_message = get_post_meta($page_id, 'contact_form_error_message', true);
+        if (empty($error_message)) {
+            $error_message = 'Vabandust, sõnumi saatmisel tekkis viga. Palun proovige uuesti või võtke meiega otse ühendust.';
+        }
+        $error_key = 'avora_contact_errors_' . wp_generate_password(12, false);
+        set_transient($error_key, [$error_message], 300);
+        wp_redirect($_POST['_wp_http_referer'] . '?contact_msg=' . $error_key . '#contact-form');
+    }
+    exit;
+}

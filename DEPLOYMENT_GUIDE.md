@@ -2,6 +2,41 @@
 
 This guide will walk you through deploying your Bedrock WordPress site to production step by step.
 
+## Production Deploy (avora.ee) – Quick steps
+
+These are the exact commands used on the live server.
+
+```bash
+# 1) SSH to the server
+ssh virt139545@avora.ee
+
+# 2) Go to the Bedrock root (this is the correct live root)
+cd ~/domeenid/www.avora.ee
+
+# 3) Pull the latest code
+git pull --ff-only origin main
+
+# 4) Install PHP deps (optimized, no dev)
+composer install --no-dev --optimize-autoloader
+
+# 5) OPTIONAL: Rebuild theme assets only if frontend changed
+cd web/app/themes/avora-wp
+npm ci --production=false
+npm run build
+cd -
+
+# 6) Reset OPcache so PHP changes take effect immediately
+php -r 'if(function_exists("opcache_reset")) { opcache_reset(); echo "OPcache reset\n"; } else { echo "OPcache not enabled\n"; }'
+
+# 7) OPTIONAL: Flush permalinks and clear caches
+wp --path=$HOME/domeenid/www.avora.ee/web/wp rewrite flush --hard
+```
+
+Notes:
+- Live Bedrock root: `~/domeenid/www.avora.ee`
+- Web root served by the host: `~/domeenid/www.avora.ee/web`
+- Admin drag-and-drop ordering script: `web/app/themes/avora-wp/admin-project-order.js`
+
 ## Prerequisites
 
 Before starting, ensure you have:

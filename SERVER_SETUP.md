@@ -46,3 +46,4 @@ chmod 775 web/app/uploads/2025 web/app/uploads/2025/08
 - ✅ https://avora.ee/app/uploads/ (images)
 - ✅ WordPress media uploads (2025/08/ structure)
 
+
