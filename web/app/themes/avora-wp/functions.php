@@ -116,6 +116,7 @@ add_action('admin_enqueue_scripts', function($hook) {
         if ($post_type == 'page' && $post && $post->post_name === 'meist') {
             wp_enqueue_media();
             wp_enqueue_script('about-page-admin', get_template_directory_uri() . '/admin-about.js', array('jquery'), '1.0.0', true);
+            wp_enqueue_script('about-content-blocks', get_template_directory_uri() . '/admin-content-blocks.js', array('jquery'), '1.0.0', true);
             wp_enqueue_style('project-admin-styles', get_template_directory_uri() . '/admin-styles.css', array(), '1.0.0');
         }
         
@@ -286,6 +287,15 @@ add_action('add_meta_boxes', function() {
             'about_page_values',
             'Meie väärtused sektsiooni',
             'about_page_values_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        
+        add_meta_box(
+            'about_content_blocks',
+            'Lisasisu plokid',
+            'about_content_blocks_callback',
             'page',
             'normal',
             'high'
@@ -464,6 +474,95 @@ function about_page_values_callback($post) {
     echo '</td></tr>';
     
     echo '</table>';
+}
+
+// About Us content blocks callback
+function about_content_blocks_callback($post) {
+    wp_nonce_field('about_content_blocks_nonce', 'about_content_blocks_nonce_field');
+    
+    $content_blocks = get_post_meta($post->ID, 'about_content_blocks', true);
+    $content_blocks = $content_blocks ? json_decode($content_blocks, true) : [];
+    
+    echo '<div class="about-content-blocks-manager">';
+    echo '<div class="blocks-actions">';
+    echo '<button type="button" class="button add-content-block">Lisa uus sisuplokk</button>';
+    echo '<p class="description">Lisa lisasisu plokke koos piltidega. Saad valida, millisel küljel pilt asub.</p>';
+    echo '</div>';
+    
+    echo '<div class="content-blocks-container" id="content-blocks-container">';
+    
+    if (!empty($content_blocks)) {
+        foreach ($content_blocks as $index => $block) {
+            echo_content_block_html($index, $block);
+        }
+    }
+    
+    echo '</div>';
+    
+    echo '<input type="hidden" id="about_content_blocks_data" name="about_content_blocks_data" value="' . esc_attr(json_encode($content_blocks)) . '" />';
+    echo '</div>';
+    
+    // Add template for new blocks
+    echo '<script type="text/html" id="content-block-template">';
+    echo_content_block_html('{{INDEX}}', [
+        'title' => '',
+        'content' => '',
+        'image' => '',
+        'image_position' => 'left'
+    ]);
+    echo '</script>';
+}
+
+// Helper function to generate content block HTML
+function echo_content_block_html($index, $block) {
+    $title = isset($block['title']) ? $block['title'] : '';
+    $content = isset($block['content']) ? $block['content'] : '';
+    $image = isset($block['image']) ? $block['image'] : '';
+    $image_position = isset($block['image_position']) ? $block['image_position'] : 'left';
+    
+    echo '<div class="content-block" data-index="' . esc_attr($index) . '">';
+    echo '<div class="content-block-header">';
+    echo '<h4>Sisuplokk ' . (is_numeric($index) ? ($index + 1) : '{{INDEX_DISPLAY}}') . '</h4>';
+    echo '<button type="button" class="button-link remove-content-block" title="Eemalda plokk">&times;</button>';
+    echo '</div>';
+    
+    echo '<table class="form-table">';
+    
+    // Title
+    echo '<tr><th scope="row"><label>Pealkiri</label></th>';
+    echo '<td><input type="text" class="block-title regular-text" value="' . esc_attr($title) . '" placeholder="Sisesta ploki pealkiri" /></td></tr>';
+    
+    // Image
+    echo '<tr><th scope="row"><label>Pilt</label></th>';
+    echo '<td>';
+    echo '<div class="block-image-upload">';
+    echo '<input type="hidden" class="block-image" value="' . esc_attr($image) . '" />';
+    echo '<div class="image-preview">';
+    if (!empty($image)) {
+        echo '<img src="' . esc_url($image) . '" alt="Ploki pilt" style="max-width: 200px; height: auto; margin-bottom: 10px; display: block;" />';
+    }
+    echo '</div>';
+    echo '<button type="button" class="button block-image-upload-btn">Vali pilt</button> ';
+    echo '<button type="button" class="button block-image-remove-btn" style="' . (empty($image) ? 'display:none;' : '') . '">Eemalda pilt</button>';
+    echo '</div>';
+    echo '</td></tr>';
+    
+    // Image position
+    echo '<tr><th scope="row"><label>Pildi asukoht</label></th>';
+    echo '<td>';
+    echo '<label><input type="radio" name="block_image_position_' . esc_attr($index) . '" class="block-image-position" value="left" ' . checked($image_position, 'left', false) . '> Vasakul</label><br>';
+    echo '<label><input type="radio" name="block_image_position_' . esc_attr($index) . '" class="block-image-position" value="right" ' . checked($image_position, 'right', false) . '> Paremal</label>';
+    echo '</td></tr>';
+    
+    // Content
+    echo '<tr><th scope="row"><label>Sisu</label></th>';
+    echo '<td>';
+    echo '<textarea class="block-content large-text" rows="8" placeholder="Sisesta ploki sisu...">' . esc_textarea($content) . '</textarea>';
+    echo '<p class="description">Sisesta ploki sisu. Saad kasutada HTML-i vorminduseks.</p>';
+    echo '</td></tr>';
+    
+    echo '</table>';
+    echo '</div>';
 }
 
 // Contact page header callback
@@ -669,6 +768,33 @@ add_action('save_post', function($post_id) {
             if (isset($_POST['about_values_content'])) {
                 // Use wp_kses_post to allow safe HTML content from the editor
                 update_post_meta($post_id, 'about_values_content', wp_kses_post($_POST['about_values_content']));
+            }
+        }
+        
+        // Save About Us content blocks
+        if (isset($_POST['about_content_blocks_nonce_field']) && 
+            wp_verify_nonce($_POST['about_content_blocks_nonce_field'], 'about_content_blocks_nonce') &&
+            $post->post_name === 'meist') {
+            
+            if (isset($_POST['about_content_blocks_data'])) {
+                $blocks_data = $_POST['about_content_blocks_data'];
+                $decoded_blocks = json_decode(stripslashes($blocks_data), true);
+                
+                if (is_array($decoded_blocks)) {
+                    // Sanitize each block
+                    $sanitized_blocks = [];
+                    foreach ($decoded_blocks as $block) {
+                        $sanitized_blocks[] = [
+                            'title' => sanitize_text_field($block['title'] ?? ''),
+                            'content' => wp_kses_post($block['content'] ?? ''),
+                            'image' => esc_url_raw($block['image'] ?? ''),
+                            'image_position' => in_array($block['image_position'] ?? 'left', ['left', 'right']) ? $block['image_position'] : 'left'
+                        ];
+                    }
+                    update_post_meta($post_id, 'about_content_blocks', json_encode($sanitized_blocks));
+                } else {
+                    update_post_meta($post_id, 'about_content_blocks', '');
+                }
             }
         }
         

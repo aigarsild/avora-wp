@@ -28,6 +28,10 @@ if (empty($values_content)) {
 </ul>';
 }
 
+// Get content blocks
+$content_blocks = get_post_meta(get_the_ID(), 'about_content_blocks', true);
+$content_blocks = $content_blocks ? json_decode($content_blocks, true) : [];
+
 get_header(); ?>
 
 <!-- Page Header -->
@@ -54,6 +58,35 @@ get_header(); ?>
         </div>
     </div>
 </section>
+
+<!-- Content Blocks -->
+<?php if (!empty($content_blocks)): ?>
+    <?php foreach ($content_blocks as $index => $block): ?>
+        <?php if (!empty($block['title']) || !empty($block['content']) || !empty($block['image'])): ?>
+            <section class="content-block-section">
+                <div class="container">
+                    <div class="feature-content <?php echo esc_attr($block['image_position'] === 'right' ? 'reverse' : ''); ?>">
+                        <?php if (!empty($block['image'])): ?>
+                            <div class="feature-image">
+                                <img src="<?php echo esc_url($block['image']); ?>" alt="<?php echo esc_attr($block['title']); ?>" class="circle-image">
+                            </div>
+                        <?php endif; ?>
+                        <div class="feature-text">
+                            <?php if (!empty($block['title'])): ?>
+                                <h2><?php echo esc_html($block['title']); ?></h2>
+                            <?php endif; ?>
+                            <?php if (!empty($block['content'])): ?>
+                                <div class="block-content">
+                                    <?php echo wp_kses_post(wpautop($block['content'])); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <?php endif; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
 
 
 
