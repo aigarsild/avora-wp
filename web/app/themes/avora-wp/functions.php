@@ -112,8 +112,8 @@ add_action('admin_enqueue_scripts', function($hook) {
             wp_enqueue_style('project-admin-styles', get_template_directory_uri() . '/admin-styles.css', array(), '1.0.0');
         }
         
-        // Enqueue for About Us page
-        if ($post_type == 'page' && $post && $post->post_name === 'meist') {
+        // Enqueue for About Us page (check by template or slug)
+        if ($post_type == 'page' && $post && (get_page_template_slug($post->ID) === 'page-meist.php' || $post->post_name === 'ettevottest')) {
             wp_enqueue_media();
             wp_enqueue_script('about-page-admin', get_template_directory_uri() . '/admin-about.js', array('jquery'), '1.0.0', true);
             wp_enqueue_script('about-content-blocks', get_template_directory_uri() . '/admin-content-blocks.js', array('jquery'), '1.0.0', true);
@@ -271,9 +271,9 @@ add_action('add_meta_boxes', function() {
         'high'
     );
     
-    // Add About Us page meta boxes (only for page with slug 'meist')
+    // Add About Us page meta boxes (only for pages using the About Us template or slug)
     global $post;
-    if ($post && $post->post_name === 'meist') {
+    if ($post && (get_page_template_slug($post->ID) === 'page-meist.php' || $post->post_name === 'ettevottest')) {
         add_meta_box(
             'about_page_header',
             'Meist lehe päis',
@@ -796,7 +796,7 @@ add_action('save_post', function($post_id) {
         // Save header fields
         if (isset($_POST['about_page_header_nonce_field']) && 
             wp_verify_nonce($_POST['about_page_header_nonce_field'], 'about_page_header_nonce') &&
-            $post->post_name === 'meist') {
+            (get_page_template_slug($post->ID) === 'page-meist.php' || $post->post_name === 'ettevottest')) {
             
             if (isset($_POST['about_page_title'])) {
                 update_post_meta($post_id, 'about_page_title', sanitize_text_field($_POST['about_page_title']));
@@ -814,7 +814,7 @@ add_action('save_post', function($post_id) {
         // Save About Us values fields
         if (isset($_POST['about_page_values_nonce_field']) && 
             wp_verify_nonce($_POST['about_page_values_nonce_field'], 'about_page_values_nonce') &&
-            $post->post_name === 'meist') {
+            (get_page_template_slug($post->ID) === 'page-meist.php' || $post->post_name === 'ettevottest')) {
             
             if (isset($_POST['about_values_title'])) {
                 update_post_meta($post_id, 'about_values_title', sanitize_text_field($_POST['about_values_title']));
@@ -831,7 +831,7 @@ add_action('save_post', function($post_id) {
         // Save About Us content blocks
         if (isset($_POST['about_content_blocks_nonce_field']) && 
             wp_verify_nonce($_POST['about_content_blocks_nonce_field'], 'about_content_blocks_nonce') &&
-            $post->post_name === 'meist') {
+            (get_page_template_slug($post->ID) === 'page-meist.php' || $post->post_name === 'ettevottest')) {
             
             // Try to get data from JSON first (for JavaScript-managed blocks)
             $blocks_data = [];

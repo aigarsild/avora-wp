@@ -1,4 +1,8 @@
-<?php 
+<?php
+/*
+Template Name: About Us Page
+*/
+
 // Get custom field values with fallbacks
 $page_title = get_post_meta(get_the_ID(), 'about_page_title', true);
 $page_description = get_post_meta(get_the_ID(), 'about_page_description', true);
