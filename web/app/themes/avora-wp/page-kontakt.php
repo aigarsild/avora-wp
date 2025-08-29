@@ -34,6 +34,7 @@ get_header(); ?>
                 $company_registry_code = get_post_meta(get_the_ID(), 'contact_company_registry_code', true);
                 $company_economic_reg = get_post_meta(get_the_ID(), 'contact_company_economic_reg', true);
                 $company_vat_reg = get_post_meta(get_the_ID(), 'contact_company_vat_reg', true);
+                $company_email = get_post_meta(get_the_ID(), 'contact_company_email', true);
                 $company_address = get_post_meta(get_the_ID(), 'contact_company_address', true);
                 
                 // Use defaults if empty
@@ -49,6 +50,9 @@ get_header(); ?>
                 if (empty($company_vat_reg)) {
                     $company_vat_reg = 'EE102691281';
                 }
+                if (empty($company_email)) {
+                    $company_email = 'info@avora.ee';
+                }
                 if (empty($company_address)) {
                     $company_address = "Tartu mnt 84a,\nKesklinna linnaosa, Tallinn\nHarju maakond, 10112";
                 }
@@ -60,6 +64,7 @@ get_header(); ?>
                     <p><strong>Registrikood:</strong> <?php echo esc_html($company_registry_code); ?></p>
                     <p><strong>Majandustegevuse reg:</strong> <?php echo esc_html($company_economic_reg); ?></p>
                     <p><strong>KMKR:</strong> <?php echo esc_html($company_vat_reg); ?></p>
+                    <p><strong>Email:</strong> <a href="mailto:<?php echo esc_attr($company_email); ?>"><?php echo esc_html($company_email); ?></a></p>
                 </div>
                 
                 <div class="company-address">

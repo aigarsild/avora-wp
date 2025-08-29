@@ -650,6 +650,7 @@ function contact_company_info_callback($post) {
     $company_registry_code = get_post_meta($post->ID, 'contact_company_registry_code', true);
     $company_economic_reg = get_post_meta($post->ID, 'contact_company_economic_reg', true);
     $company_vat_reg = get_post_meta($post->ID, 'contact_company_vat_reg', true);
+    $company_email = get_post_meta($post->ID, 'contact_company_email', true);
     $company_address = get_post_meta($post->ID, 'contact_company_address', true);
     
     // Use defaults if empty
@@ -664,6 +665,9 @@ function contact_company_info_callback($post) {
     }
     if (empty($company_vat_reg)) {
         $company_vat_reg = 'EE102691281';
+    }
+    if (empty($company_email)) {
+        $company_email = 'info@avora.ee';
     }
     if (empty($company_address)) {
         $company_address = "Tartu mnt 84a,\nKesklinna linnaosa, Tallinn\nHarju maakond, 10112";
@@ -681,6 +685,9 @@ function contact_company_info_callback($post) {
     
     echo '<tr><th scope="row"><label for="contact_company_vat_reg">KMKR</label></th>';
     echo '<td><input type="text" id="contact_company_vat_reg" name="contact_company_vat_reg" value="' . esc_attr($company_vat_reg) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="contact_company_email">Email</label></th>';
+    echo '<td><input type="email" id="contact_company_email" name="contact_company_email" value="' . esc_attr($company_email) . '" class="regular-text" /></td></tr>';
     
     echo '<tr><th scope="row"><label for="contact_company_address">Aadress</label></th>';
     echo '<td><textarea id="contact_company_address" name="contact_company_address" rows="4" class="large-text">' . esc_textarea($company_address) . '</textarea></td></tr>';
@@ -906,6 +913,11 @@ add_action('save_post', function($post_id) {
                 if (isset($_POST[$field])) {
                     update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
                 }
+            }
+            
+            // Save company email separately with email validation
+            if (isset($_POST['contact_company_email'])) {
+                update_post_meta($post_id, 'contact_company_email', sanitize_email($_POST['contact_company_email']));
             }
             
             if (isset($_POST['contact_company_address'])) {
