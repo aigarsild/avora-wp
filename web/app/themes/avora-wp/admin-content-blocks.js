@@ -11,31 +11,8 @@ jQuery(document).ready(function($) {
         
         $('#content-blocks-container').append(blockHtml);
         
-        // Initialize TinyMCE for the new textarea
-        let newTextarea = $('#content-blocks-container .content-block:last .block-content');
-        if (newTextarea.length && typeof tinymce !== 'undefined') {
-            let editorId = 'block_content_' + blockIndex;
-            newTextarea.attr('id', editorId);
-            
-            // Initialize TinyMCE
-            tinymce.init({
-                selector: '#' + editorId,
-                height: 200,
-                menubar: false,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste code help wordcount'
-                ],
-                toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }',
-                setup: function(editor) {
-                    editor.on('change', function() {
-                        updateBlocksData();
-                    });
-                }
-            });
-        }
+        // Note: New blocks will use plain textareas that get converted to wp_editor on page save/reload
+        // WordPress native editors can't be dynamically initialized via JavaScript easily
         
         // Update radio button names for the new block
         updateRadioButtonNames();

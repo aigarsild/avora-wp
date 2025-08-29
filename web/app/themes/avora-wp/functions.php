@@ -410,14 +410,23 @@ function about_page_header_callback($post) {
     echo '<td>';
     wp_editor($page_description, 'about_page_description', [
         'textarea_name' => 'about_page_description',
-        'textarea_rows' => 8,
+        'textarea_rows' => 12,
         'media_buttons' => true,
         'teeny' => false,
+        'wpautop' => true,
         'tinymce' => [
-            'toolbar1' => 'bold,italic,underline,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,fullscreen,wp_adv',
-            'toolbar2' => 'formatselect,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help'
+            'height' => 300,
+            'menubar' => true,
+            'plugins' => 'advlist,autolink,lists,link,image,charmap,print,preview,anchor,searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,code,help,wordcount',
+            'toolbar1' => 'formatselect,fontselect,fontsizeselect',
+            'toolbar2' => 'bold,italic,underline,strikethrough,forecolor,backcolor,removeformat',
+            'toolbar3' => 'alignleft,aligncenter,alignright,alignjustify,outdent,indent',
+            'toolbar4' => 'bullist,numlist,blockquote,hr,link,unlink,image,media,table',
+            'toolbar5' => 'undo,redo,cut,copy,paste,searchreplace,visualblocks,code,fullscreen,help'
         ],
-        'quicktags' => true
+        'quicktags' => [
+            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close'
+        ]
     ]);
     echo '<p class="description">Sisesta lehe kirjeldus. Saad kasutada rikkalikku tekstitoimturit vorminduseks. See tekst kuvatakse lehe päises täislaiuses.</p>';
     echo '</td></tr>';
@@ -577,15 +586,24 @@ function echo_content_block_html($index, $block) {
         $editor_id = 'block_content_' . $index;
         wp_editor($content, $editor_id, [
             'textarea_name' => 'block_content_' . $index,
-            'textarea_rows' => 8,
+            'textarea_rows' => 12,
             'media_buttons' => true,
             'teeny' => false,
+            'wpautop' => true,
             'editor_class' => 'block-content-editor',
             'tinymce' => [
-                'toolbar1' => 'bold,italic,underline,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,fullscreen,wp_adv',
-                'toolbar2' => 'formatselect,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help'
+                'height' => 300,
+                'menubar' => true,
+                'plugins' => 'advlist,autolink,lists,link,image,charmap,print,preview,anchor,searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,code,help,wordcount',
+                'toolbar1' => 'formatselect,fontselect,fontsizeselect',
+                'toolbar2' => 'bold,italic,underline,strikethrough,forecolor,backcolor,removeformat',
+                'toolbar3' => 'alignleft,aligncenter,alignright,alignjustify,outdent,indent',
+                'toolbar4' => 'bullist,numlist,blockquote,hr,link,unlink,image,media,table',
+                'toolbar5' => 'undo,redo,cut,copy,paste,searchreplace,visualblocks,code,fullscreen,help'
             ],
-            'quicktags' => true
+            'quicktags' => [
+                'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close'
+            ]
         ]);
     } else {
         // Template - use textarea that will be replaced by TinyMCE later
