@@ -4,7 +4,7 @@
 <section class="page-header">
     <div class="container">
         <h1 class="page-title">Projektid</h1>
-        <p class="page-description">Tutvuge meie teostatud ja käimasolevate projektidega - igaüks neist on unikaalne lugu kvaliteetsest arhitektuurist.</p>
+
     </div>
 </section>
 
