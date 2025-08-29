@@ -881,6 +881,7 @@ input, textarea, select {
     align-items: center;
 }
 
+
 .circle-image {
     width: 500px;
     height: 500px;
@@ -901,6 +902,58 @@ input, textarea, select {
     color: var(--text-secondary);
     margin-bottom: var(--space-2xl);
     font-weight: var(--font-weight-normal);
+}
+
+/* Full-width content blocks */
+.fullwidth-block {
+    padding: var(--space-6xl) 0;
+}
+
+.fullwidth-content {
+    display: block;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.fullwidth-block .fullwidth-content h2 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-2xl);
+    color: var(--text-primary);
+    text-align: center !important;
+}
+
+.fullwidth-text {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.7;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.fullwidth-text p {
+    margin-bottom: var(--space-lg);
+    font-weight: var(--font-weight-normal);
+}
+
+/* Custom fullwidth block styling */
+.custom-fullwidth-block {
+    /* Add any custom styles here */
+}
+
+@media (max-width: 768px) {
+    .fullwidth-content {
+        max-width: 100%;
+        padding: 0 var(--space-lg);
+    }
+    
+    .fullwidth-block .fullwidth-content h2 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .fullwidth-text {
+        font-size: var(--font-size-base);
+    }
 }
 
 .feature-buttons {
@@ -1111,8 +1164,9 @@ input, textarea, select {
 }
 
 .footer-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: var(--space-2xl);
     margin-bottom: var(--space-lg);
 }
@@ -2289,8 +2343,9 @@ input, textarea, select {
     }
     
     .footer-content {
-        grid-template-columns: 1fr;
+        flex-direction: column;
         gap: var(--space-lg);
+        align-items: center;
     }
 
 
@@ -2370,8 +2425,9 @@ input, textarea, select {
     }
     
     .footer-content {
-        grid-template-columns: 1fr;
+        flex-direction: column;
         gap: var(--space-lg);
+        align-items: center;
     }
     
     .footer-right {
@@ -2437,6 +2493,11 @@ input, textarea, select {
         white-space: normal;
         flex-shrink: 1;
     }
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
 }
 
 .footer-left p {

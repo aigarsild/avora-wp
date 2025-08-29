@@ -50,6 +50,24 @@ jQuery(document).ready(function($) {
         updateBlocksData();
     });
     
+    // Handle block type changes - show/hide image fields
+    $(document).on('change', '.block-type', function() {
+        let block = $(this).closest('.content-block');
+        let blockType = $(this).val();
+        let imageRow = block.find('.block-image').closest('tr');
+        let imagePositionRow = block.find('.block-image-position').closest('tr');
+        
+        if (blockType === 'fullwidth') {
+            imageRow.hide();
+            imagePositionRow.hide();
+        } else {
+            imageRow.show();
+            imagePositionRow.show();
+        }
+        
+        updateBlocksData();
+    });
+    
     // Image upload functionality
     $(document).on('click', '.block-image-upload-btn', function(e) {
         e.preventDefault();
@@ -110,6 +128,25 @@ jQuery(document).ready(function($) {
     function updateRadioButtonNames() {
         $('.content-block').each(function(index) {
             $(this).find('.block-image-position').attr('name', 'block_image_position_' + index);
+            $(this).find('.block-type').attr('name', 'block_type_' + index);
+        });
+    }
+    
+    // Initialize block type visibility on page load
+    function initializeBlockTypeVisibility() {
+        $('.content-block').each(function() {
+            let block = $(this);
+            let blockType = block.find('.block-type:checked').val() || 'regular';
+            let imageRow = block.find('.block-image').closest('tr');
+            let imagePositionRow = block.find('.block-image-position').closest('tr');
+            
+            if (blockType === 'fullwidth') {
+                imageRow.hide();
+                imagePositionRow.hide();
+            } else {
+                imageRow.show();
+                imagePositionRow.show();
+            }
         });
     }
     
@@ -138,7 +175,8 @@ jQuery(document).ready(function($) {
                 title: block.find('.block-title').val() || '',
                 content: content,
                 image: block.find('.block-image').val() || '',
-                image_position: block.find('.block-image-position:checked').val() || 'left'
+                image_position: block.find('.block-image-position:checked').val() || 'left',
+                block_type: block.find('.block-type:checked').val() || 'regular'
             };
             blocks.push(blockData);
         });
@@ -170,4 +208,5 @@ jQuery(document).ready(function($) {
     updateRadioButtonNames();
     updateBlocksData();
     initializeExistingEditors();
+    initializeBlockTypeVisibility();
 });

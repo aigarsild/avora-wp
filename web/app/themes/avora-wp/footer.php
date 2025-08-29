@@ -6,12 +6,7 @@
                 <div class="logo">
                     <img src="<?php echo get_template_directory_uri(); ?>/avora-logo-white.svg" alt="<?php bloginfo('name'); ?> Logo" class="logo-img">
                 </div>
-                <p>
-                    <div class="contact-icon-wrapper">
-                        <img src="<?php echo get_template_directory_uri(); ?>/images/icons/map-icon.svg" alt="Asukoht" class="contact-icon">
-                    </div>
-                    <span class="contact-text">Tartu mnt 84a, Kesklinna linnaosa, Tallinn, Harju maakond, 10112</span>
-                </p>
+
             </div>
             <div class="footer-right">
                 <div class="social-links">

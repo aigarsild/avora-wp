@@ -530,7 +530,8 @@ function about_content_blocks_callback($post) {
         'title' => '',
         'content' => '',
         'image' => '',
-        'image_position' => 'left'
+        'image_position' => 'left',
+        'block_type' => 'regular'
     ]);
     echo '</script>';
 }
@@ -541,6 +542,7 @@ function echo_content_block_html($index, $block) {
     $content = isset($block['content']) ? $block['content'] : '';
     $image = isset($block['image']) ? $block['image'] : '';
     $image_position = isset($block['image_position']) ? $block['image_position'] : 'left';
+    $block_type = isset($block['block_type']) ? $block['block_type'] : 'regular';
     
     echo '<div class="content-block" data-index="' . esc_attr($index) . '">';
     echo '<div class="content-block-header">';
@@ -553,6 +555,13 @@ function echo_content_block_html($index, $block) {
     // Title
     echo '<tr><th scope="row"><label>Pealkiri</label></th>';
     echo '<td><input type="text" class="block-title regular-text" value="' . esc_attr($title) . '" placeholder="Sisesta ploki pealkiri" /></td></tr>';
+    
+    // Block type
+    echo '<tr><th scope="row"><label>Ploki tüüp</label></th>';
+    echo '<td>';
+    echo '<label><input type="radio" name="block_type_' . esc_attr($index) . '" class="block-type" value="regular" ' . checked($block_type, 'regular', false) . '> Tavaline (koos pildiga)</label><br>';
+    echo '<label><input type="radio" name="block_type_' . esc_attr($index) . '" class="block-type" value="fullwidth" ' . checked($block_type, 'fullwidth', false) . '> Täislaiuses (ilma pildita)</label>';
+    echo '</td></tr>';
     
     // Image
     echo '<tr><th scope="row"><label>Pilt</label></th>';
@@ -877,7 +886,8 @@ add_action('save_post', function($post_id) {
                             'title' => sanitize_text_field($block['title'] ?? ''),
                             'content' => wp_kses_post($content),
                             'image' => esc_url_raw($block['image'] ?? ''),
-                            'image_position' => in_array($block['image_position'] ?? 'left', ['left', 'right']) ? $block['image_position'] : 'left'
+                            'image_position' => in_array($block['image_position'] ?? 'left', ['left', 'right']) ? $block['image_position'] : 'left',
+                            'block_type' => in_array($block['block_type'] ?? 'regular', ['regular', 'fullwidth']) ? $block['block_type'] : 'regular'
                         ];
                     }
                 update_post_meta($post_id, 'about_content_blocks', json_encode($sanitized_blocks, JSON_UNESCAPED_UNICODE));

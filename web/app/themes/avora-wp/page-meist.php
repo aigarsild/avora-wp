@@ -94,9 +94,45 @@ get_header(); ?>
 <?php if (!empty($content_blocks)): ?>
     <?php foreach ($content_blocks as $index => $block): ?>
         <?php if (!empty($block['title']) || !empty($block['content']) || !empty($block['image'])): ?>
-            <section class="content-block-section">
+            <?php 
+            $block_type = isset($block['block_type']) ? $block['block_type'] : 'regular';
+            ?>
+            <!-- DEBUG: Block type is: <?php echo esc_html($block_type); ?> -->
+            <section class="content-block-section <?php echo esc_attr($block_type === 'fullwidth' ? 'fullwidth-block' : ''); ?>">
                 <div class="container">
-                    <div class="feature-content <?php echo esc_attr($block['image_position'] === 'right' ? 'reverse' : ''); ?>">
+                    <?php if ($block_type === 'fullwidth'): ?>
+                        <!-- DEBUG: Rendering FULLWIDTH block -->
+                        <div class="fullwidth-content custom-fullwidth-block">
+                            <?php if (!empty($block['title'])): ?>
+                                <h2><?php echo esc_html($block['title']); ?></h2>
+                            <?php endif; ?>
+                            <?php if (!empty($block['content'])): ?>
+                                <div class="fullwidth-text">
+                                    <?php 
+                                    // Process content from TinyMCE editor
+                                    $content = $block['content'];
+                                    
+                                    // Clean the content first to remove unwanted characters
+                                    $cleaned_content = $content;
+                                    $cleaned_content = str_replace(['\r\n', '\n', '\r', 'rn', '\\r\\n', '\\n', '\\r'], '', $cleaned_content);
+                                    $cleaned_content = preg_replace('/\s+/', ' ', $cleaned_content);
+                                    $cleaned_content = trim($cleaned_content);
+                                    
+                                    // Check if content has paragraph tags already (from TinyMCE)
+                                    if (strpos($cleaned_content, '<p>') !== false || strpos($cleaned_content, '<br') !== false) {
+                                        // Content already has HTML formatting from TinyMCE
+                                        echo wp_kses_post($cleaned_content);
+                                    } else {
+                                        // Plain text content - convert line breaks to paragraphs
+                                        echo wp_kses_post(wpautop($cleaned_content));
+                                    }
+                                    ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php else: ?>
+                        <!-- DEBUG: Rendering REGULAR block -->
+                        <div class="feature-content <?php echo esc_attr($block['image_position'] === 'right' ? 'reverse' : ''); ?>">
                         <?php if (!empty($block['image'])): ?>
                             <div class="feature-image">
                                 <img src="<?php echo esc_url($block['image']); ?>" alt="<?php echo esc_attr($block['title']); ?>" class="circle-image">
@@ -130,7 +166,8 @@ get_header(); ?>
                                 </div>
                             <?php endif; ?>
                         </div>
-                    </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </section>
         <?php endif; ?>
