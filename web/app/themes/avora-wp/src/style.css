@@ -900,7 +900,7 @@ input, textarea, select {
     font-size: var(--font-size-lg);
     color: var(--text-secondary);
     margin-bottom: var(--space-2xl);
-    font-weight: var(--font-weight-light);
+    font-weight: var(--font-weight-normal);
 }
 
 .feature-buttons {
@@ -1209,7 +1209,7 @@ input, textarea, select {
 
 /* Page Header */
 .page-header {
-    padding: var(--space-6xl) 0;
+    padding: var(--space-6xl) 0 var(--space-2xl) 0;
     background: var(--bg-primary);
     text-align: center;
 }
@@ -2074,7 +2074,7 @@ input, textarea, select {
     color: var(--color-primary);
     opacity: 0.8;
     margin-bottom: var(--space-xl);
-    font-weight: var(--font-weight-light);
+    font-weight: var(--font-weight-normal);
 }
 
 .feature-buttons {
@@ -2471,6 +2471,29 @@ input, textarea, select {
 }
 
 /* Content Blocks Styles */
+/* Page Description Section */
+.page-description-section {
+    padding: var(--space-2xl) 0 var(--space-6xl) 0;
+    background: var(--bg-primary);
+}
+
+.page-description-content {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.7;
+    text-align: center;
+    max-width: 100%;
+}
+
+.page-description-content p {
+    margin-bottom: var(--space-lg);
+    font-weight: var(--font-weight-normal);
+}
+
+.page-description-content p:last-child {
+    margin-bottom: 0;
+}
+
 .content-block-section {
     padding: var(--space-6xl) 0;
     background: var(--bg-primary);
@@ -2494,11 +2517,13 @@ input, textarea, select {
 
 .block-content {
     font-size: var(--font-size-lg);
-    line-height: 1.6;
+    font-weight: var(--font-weight-normal);
+    line-height: 1.7;
 }
 
 .block-content p {
     margin-bottom: var(--space-lg);
+    font-weight: var(--font-weight-normal);
 }
 
 .block-content ul, .block-content ol {

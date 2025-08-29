@@ -407,7 +407,20 @@ function about_page_header_callback($post) {
     echo '<td><input type="text" id="about_page_title" name="about_page_title" value="' . esc_attr($page_title) . '" class="regular-text" /></td></tr>';
     
     echo '<tr><th scope="row"><label for="about_page_description">Lehe kirjeldus</label></th>';
-    echo '<td><textarea id="about_page_description" name="about_page_description" rows="3" class="large-text">' . esc_textarea($page_description) . '</textarea></td></tr>';
+    echo '<td>';
+    wp_editor($page_description, 'about_page_description', [
+        'textarea_name' => 'about_page_description',
+        'textarea_rows' => 8,
+        'media_buttons' => true,
+        'teeny' => false,
+        'tinymce' => [
+            'toolbar1' => 'bold,italic,underline,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,fullscreen,wp_adv',
+            'toolbar2' => 'formatselect,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help'
+        ],
+        'quicktags' => true
+    ]);
+    echo '<p class="description">Sisesta lehe kirjeldus. Saad kasutada rikkalikku tekstitoimturit vorminduseks. See tekst kuvatakse lehe päises täislaiuses.</p>';
+    echo '</td></tr>';
     
     echo '</table>';
 }
@@ -570,22 +583,7 @@ function echo_content_block_html($index, $block) {
             'editor_class' => 'block-content-editor',
             'tinymce' => [
                 'toolbar1' => 'bold,italic,underline,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,fullscreen,wp_adv',
-                'toolbar2' => 'formatselect,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
-                'forced_root_block' => 'p',
-                'force_br_newlines' => false,
-                'force_p_newlines' => true,
-                'setup' => 'function(editor) {
-                    editor.on("keydown", function(e) {
-                        if (e.keyCode === 13 && !e.shiftKey) {
-                            e.preventDefault();
-                            editor.insertContent("<p>&nbsp;</p><p></p>");
-                            var node = editor.getBody().lastChild;
-                            if (node && node.nodeName === "P") {
-                                editor.selection.setCursorLocation(node, 0);
-                            }
-                        }
-                    });
-                }'
+                'toolbar2' => 'formatselect,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help'
             ],
             'quicktags' => true
         ]);
@@ -786,7 +784,12 @@ add_action('save_post', function($post_id) {
                 update_post_meta($post_id, 'about_page_title', sanitize_text_field($_POST['about_page_title']));
             }
             if (isset($_POST['about_page_description'])) {
-                update_post_meta($post_id, 'about_page_description', sanitize_textarea_field($_POST['about_page_description']));
+                $description = $_POST['about_page_description'];
+                // Clean unwanted characters before saving
+                $description = str_replace(['\r\n', '\n', '\r', 'rn', '\\r\\n', '\\n', '\\r'], '', $description);
+                $description = preg_replace('/\s+/', ' ', $description);
+                $description = trim($description);
+                update_post_meta($post_id, 'about_page_description', wp_kses_post($description));
             }
         }
         
@@ -836,16 +839,22 @@ add_action('save_post', function($post_id) {
             }
             
             if (!empty($blocks_data)) {
-                // Sanitize each block
-                $sanitized_blocks = [];
-                foreach ($blocks_data as $block) {
-                    $sanitized_blocks[] = [
-                        'title' => sanitize_text_field($block['title'] ?? ''),
-                        'content' => wp_kses_post($block['content'] ?? ''),
-                        'image' => esc_url_raw($block['image'] ?? ''),
-                        'image_position' => in_array($block['image_position'] ?? 'left', ['left', 'right']) ? $block['image_position'] : 'left'
-                    ];
-                }
+                                    // Sanitize each block
+                    $sanitized_blocks = [];
+                    foreach ($blocks_data as $block) {
+                        $content = $block['content'] ?? '';
+                        // Clean unwanted characters from content
+                        $content = str_replace(['\r\n', '\n', '\r', 'rn', '\\r\\n', '\\n', '\\r'], '', $content);
+                        $content = preg_replace('/\s+/', ' ', $content);
+                        $content = trim($content);
+                        
+                        $sanitized_blocks[] = [
+                            'title' => sanitize_text_field($block['title'] ?? ''),
+                            'content' => wp_kses_post($content),
+                            'image' => esc_url_raw($block['image'] ?? ''),
+                            'image_position' => in_array($block['image_position'] ?? 'left', ['left', 'right']) ? $block['image_position'] : 'left'
+                        ];
+                    }
                 update_post_meta($post_id, 'about_content_blocks', json_encode($sanitized_blocks, JSON_UNESCAPED_UNICODE));
             } else {
                 update_post_meta($post_id, 'about_content_blocks', '');

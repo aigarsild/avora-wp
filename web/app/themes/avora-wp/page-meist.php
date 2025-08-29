@@ -38,9 +38,36 @@ get_header(); ?>
 <section class="page-header">
     <div class="container">
         <h1 class="page-title"><?php echo esc_html($page_title); ?></h1>
-        <p class="page-description"><?php echo esc_html($page_description); ?></p>
     </div>
 </section>
+
+<!-- Page Description - Full Width -->
+<?php if (!empty($page_description)): ?>
+<section class="page-description-section">
+    <div class="container">
+        <div class="page-description-content">
+            <?php 
+            // Clean the content first to remove unwanted characters
+            $cleaned_content = $page_description;
+            
+            // Remove various types of unwanted characters
+            $cleaned_content = str_replace(['\r\n', '\n', '\r', 'rn', '\\r\\n', '\\n', '\\r'], '', $cleaned_content);
+            $cleaned_content = preg_replace('/\s+/', ' ', $cleaned_content); // Replace multiple spaces with single space
+            $cleaned_content = trim($cleaned_content);
+            
+            // Check if content has paragraph tags already (from TinyMCE)
+            if (strpos($cleaned_content, '<p>') !== false || strpos($cleaned_content, '<br') !== false) {
+                // Content already has HTML formatting from TinyMCE
+                echo wp_kses_post($cleaned_content);
+            } else {
+                // Plain text content - convert line breaks to paragraphs
+                echo wp_kses_post(wpautop($cleaned_content));
+            }
+            ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 
 <!-- Values Section -->
 <section class="feature">
@@ -81,13 +108,19 @@ get_header(); ?>
                                     // Process content from TinyMCE editor
                                     $content = $block['content'];
                                     
+                                    // Clean the content first to remove unwanted characters
+                                    $cleaned_content = $content;
+                                    $cleaned_content = str_replace(['\r\n', '\n', '\r', 'rn', '\\r\\n', '\\n', '\\r'], '', $cleaned_content);
+                                    $cleaned_content = preg_replace('/\s+/', ' ', $cleaned_content); // Replace multiple spaces with single space
+                                    $cleaned_content = trim($cleaned_content);
+                                    
                                     // Check if content has paragraph tags already (from TinyMCE)
-                                    if (strpos($content, '<p>') !== false || strpos($content, '<br') !== false) {
+                                    if (strpos($cleaned_content, '<p>') !== false || strpos($cleaned_content, '<br') !== false) {
                                         // Content already has HTML formatting from TinyMCE
-                                        echo wp_kses_post($content);
+                                        echo wp_kses_post($cleaned_content);
                                     } else {
                                         // Plain text content - convert line breaks to paragraphs
-                                        echo wp_kses_post(wpautop($content));
+                                        echo wp_kses_post(wpautop($cleaned_content));
                                     }
                                     ?>
                                 </div>

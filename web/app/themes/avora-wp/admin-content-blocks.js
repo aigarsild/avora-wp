@@ -29,28 +29,9 @@ jQuery(document).ready(function($) {
                 ],
                 toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
                 content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }',
-                forced_root_block: 'p',
-                force_br_newlines: false,
-                force_p_newlines: true,
                 setup: function(editor) {
                     editor.on('change', function() {
                         updateBlocksData();
-                    });
-                    
-                    // Add custom Enter key behavior
-                    editor.on('keydown', function(e) {
-                        if (e.keyCode === 13 && !e.shiftKey) { // Enter key (not Shift+Enter)
-                            e.preventDefault();
-                            
-                            // Insert empty paragraph for spacing
-                            editor.insertContent('<p>&nbsp;</p><p></p>');
-                            
-                            // Move cursor to the empty paragraph
-                            var node = editor.getBody().lastChild;
-                            if (node && node.nodeName === 'P') {
-                                editor.selection.setCursorLocation(node, 0);
-                            }
-                        }
                     });
                 }
             });
