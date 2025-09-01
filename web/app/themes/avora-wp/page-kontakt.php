@@ -71,6 +71,18 @@ get_header(); ?>
                     <h3>Aadress:</h3>
                     <p><?php echo nl2br(esc_html($company_address)); ?></p>
                 </div>
+                
+                <div class="company-social">
+                    <h3>Jälgi meid:</h3>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61566708334193" class="social-link" target="_blank" rel="noopener noreferrer">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/icons/facebook-icon.svg" alt="Facebook" class="social-icon">
+                        </a>
+                        <a href="https://www.instagram.com/mannisalu_kodud/" class="social-link" target="_blank" rel="noopener noreferrer">
+                            <img src="<?php echo get_template_directory_uri(); ?>/images/icons/instagram-icon.svg" alt="Instagram" class="social-icon">
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <!-- Contact Form -->

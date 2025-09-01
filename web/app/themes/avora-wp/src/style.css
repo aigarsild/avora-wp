@@ -2531,6 +2531,43 @@ input, textarea, select {
     gap: var(--space-md);
 }
 
+/* Contact page social media styling */
+.company-social {
+    margin-top: var(--space-2xl);
+}
+
+.company-social h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-md);
+    color: var(--text-primary);
+}
+
+.company-social .social-links {
+    justify-content: flex-start;
+}
+
+.company-social .social-link {
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    padding: var(--space-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.company-social .social-link:hover {
+    background-color: var(--color-primary-light);
+    transform: scale(1.05);
+}
+
+.company-social .social-icon {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+}
+
 /* Content Blocks Styles */
 /* Page Description Section */
 .page-description-section {
