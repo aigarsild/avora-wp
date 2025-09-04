@@ -77,7 +77,7 @@ body_class($body_classes);
                     $current_url = $_SERVER['REQUEST_URI'];
                     $menu_items = [
                         ['url' => home_url(), 'title' => 'Esileht', 'slug' => '/'],
-                        ['url' => home_url('/meist'), 'title' => 'Meist', 'slug' => '/meist'],
+                        ['url' => home_url('/ettevottest'), 'title' => 'Meist', 'slug' => '/ettevottest'],
                         ['url' => home_url('/projektid'), 'title' => 'Projektid', 'slug' => '/projektid'],
                         ['url' => home_url('/kontakt'), 'title' => 'Kontakt', 'slug' => '/kontakt']
                     ];
@@ -116,7 +116,7 @@ body_class($body_classes);
             
             <ul class="mobile-nav-menu">
                 <li><a href="<?php echo home_url(); ?>">Esileht</a></li>
-                <li><a href="<?php echo home_url('/meist'); ?>">Meist</a></li>
+                <li><a href="<?php echo home_url('/ettevottest'); ?>">Meist</a></li>
                 <li><a href="<?php echo home_url('/projektid'); ?>">Projektid</a></li>
                 <li><a href="<?php echo home_url('/kontakt'); ?>">Kontakt</a></li>
             </ul>
