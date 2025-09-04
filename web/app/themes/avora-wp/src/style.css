@@ -676,7 +676,7 @@ input, textarea, select {
 }
 
 .hero-text {
-    max-width: 500px;
+    max-width: 45%;
     padding-top: var(--space-5xl);
     position: relative;
     z-index: 3;
