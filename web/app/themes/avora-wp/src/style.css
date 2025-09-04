@@ -676,10 +676,15 @@ input, textarea, select {
 }
 
 .hero-text {
-    max-width: 45%;
+    max-width: 500px;
     padding-top: var(--space-5xl);
     position: relative;
     z-index: 3;
+}
+
+/* Project page hero text - narrower */
+.project-header.hero .hero-text {
+    max-width: 45%;
 }
 
 .hero-text h1 {
