@@ -1629,8 +1629,6 @@ input, textarea, select {
     pointer-events: none;
     z-index: 2;
     border-radius: 0 0 800px 0;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
 }
 
 

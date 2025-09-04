@@ -846,6 +846,16 @@ function project_hero_media_callback($post) {
     echo '<span id="opacity-display">' . esc_html($overlay_opacity) . '</span>';
     echo '<p class="description">Määra overlay läbipaistvus (0 = täiesti läbipaistev, 1 = täiesti kattev).</p></td></tr>';
     
+    // Video overlay blur
+    $overlay_blur = get_post_meta($post->ID, 'project_hero_video_overlay_blur', true);
+    if (empty($overlay_blur)) {
+        $overlay_blur = '2';
+    }
+    echo '<tr class="hero-video-overlay-row" style="' . ($hero_media_type !== 'video' ? 'display:none;' : '') . '"><th scope="row"><label for="project_hero_video_overlay_blur">Video overlay hägusus</label></th>';
+    echo '<td><input type="range" id="project_hero_video_overlay_blur" name="project_hero_video_overlay_blur" value="' . esc_attr($overlay_blur) . '" min="0" max="10" step="0.5" />';
+    echo '<span id="blur-display">' . esc_html($overlay_blur) . 'px</span>';
+    echo '<p class="description">Määra overlay hägususe tugevus (0 = hägusus puudub, 10 = tugev hägusus).</p></td></tr>';
+    
     echo '</table>';
 }
 
@@ -1045,7 +1055,7 @@ add_action('save_post', function($post_id) {
         isset($_POST['project_hero_media_nonce_field']) && 
         wp_verify_nonce($_POST['project_hero_media_nonce_field'], 'project_hero_media_nonce')) {
         
-        $hero_fields = ['project_hero_media_type', 'project_hero_image', 'project_hero_video', 'project_hero_video_overlay_color', 'project_hero_video_overlay_opacity'];
+        $hero_fields = ['project_hero_media_type', 'project_hero_image', 'project_hero_video', 'project_hero_video_overlay_color', 'project_hero_video_overlay_opacity', 'project_hero_video_overlay_blur'];
         
         foreach ($hero_fields as $field) {
             if (isset($_POST[$field])) {
@@ -1056,6 +1066,11 @@ add_action('save_post', function($post_id) {
                     $opacity = floatval($_POST[$field]);
                     $opacity = max(0, min(1, $opacity));
                     update_post_meta($post_id, $field, $opacity);
+                } elseif ($field === 'project_hero_video_overlay_blur') {
+                    // Validate blur value (0-10)
+                    $blur = floatval($_POST[$field]);
+                    $blur = max(0, min(10, $blur));
+                    update_post_meta($post_id, $field, $blur);
                 } else {
                     update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
                 }

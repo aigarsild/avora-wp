@@ -47,12 +47,16 @@
                 // Get video overlay settings
                 $overlay_color = get_post_meta(get_the_ID(), 'project_hero_video_overlay_color', true);
                 $overlay_opacity = get_post_meta(get_the_ID(), 'project_hero_video_overlay_opacity', true);
+                $overlay_blur = get_post_meta(get_the_ID(), 'project_hero_video_overlay_blur', true);
                 
                 if (empty($overlay_color)) {
                     $overlay_color = '#000000';
                 }
                 if (empty($overlay_opacity)) {
                     $overlay_opacity = '0.3';
+                }
+                if (empty($overlay_blur)) {
+                    $overlay_blur = '2';
                 }
                 
                 // Convert hex color to RGB for rgba
@@ -78,7 +82,7 @@
                         <source src="<?php echo esc_url($hero_video); ?>" type="video/webm">
                         Your browser does not support the video tag.
                     </video>
-                    <div class="video-overlay" style="background-color: <?php echo esc_attr($rgba_color); ?>;"></div>
+                    <div class="video-overlay" style="background-color: <?php echo esc_attr($rgba_color); ?>; backdrop-filter: blur(<?php echo esc_attr($overlay_blur); ?>px); -webkit-backdrop-filter: blur(<?php echo esc_attr($overlay_blur); ?>px);"></div>
                 </div>
             <?php elseif ($hero_media_type === 'custom_image' && !empty($hero_image)) : ?>
                 <div class="project-header-image hero-image">

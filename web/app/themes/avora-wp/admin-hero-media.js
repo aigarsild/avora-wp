@@ -106,4 +106,9 @@ jQuery(document).ready(function($) {
     $('#project_hero_video_overlay_opacity').on('input', function() {
         $('#opacity-display').text($(this).val());
     });
+    
+    // Handle blur slider display update
+    $('#project_hero_video_overlay_blur').on('input', function() {
+        $('#blur-display').text($(this).val() + 'px');
+    });
 });
