@@ -43,13 +43,32 @@
             }
             
             // Display hero media based on type
-            if ($hero_media_type === 'video' && !empty($hero_video)) : ?>
+            if ($hero_media_type === 'video' && !empty($hero_video)) : 
+                // Get video overlay settings
+                $overlay_color = get_post_meta(get_the_ID(), 'project_hero_video_overlay_color', true);
+                $overlay_opacity = get_post_meta(get_the_ID(), 'project_hero_video_overlay_opacity', true);
+                
+                if (empty($overlay_color)) {
+                    $overlay_color = '#000000';
+                }
+                if (empty($overlay_opacity)) {
+                    $overlay_opacity = '0.3';
+                }
+                
+                // Convert hex color to RGB for rgba
+                $hex = ltrim($overlay_color, '#');
+                $r = hexdec(substr($hex, 0, 2));
+                $g = hexdec(substr($hex, 2, 2));
+                $b = hexdec(substr($hex, 4, 2));
+                $rgba_color = "rgba($r, $g, $b, $overlay_opacity)";
+                ?>
                 <div class="project-header-image hero-image">
                     <video autoplay muted loop playsinline class="hero-video">
                         <source src="<?php echo esc_url($hero_video); ?>" type="video/mp4">
                         <source src="<?php echo esc_url($hero_video); ?>" type="video/webm">
                         Your browser does not support the video tag.
                     </video>
+                    <div class="video-overlay" style="background-color: <?php echo esc_attr($rgba_color); ?>;"></div>
                 </div>
             <?php elseif ($hero_media_type === 'custom_image' && !empty($hero_image)) : ?>
                 <div class="project-header-image hero-image">

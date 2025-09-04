@@ -827,6 +827,25 @@ function project_hero_media_callback($post) {
     echo '</div>';
     echo '</td></tr>';
     
+    // Video overlay color
+    $overlay_color = get_post_meta($post->ID, 'project_hero_video_overlay_color', true);
+    if (empty($overlay_color)) {
+        $overlay_color = '#000000';
+    }
+    echo '<tr class="hero-video-overlay-row" style="' . ($hero_media_type !== 'video' ? 'display:none;' : '') . '"><th scope="row"><label for="project_hero_video_overlay_color">Video overlay värv</label></th>';
+    echo '<td><input type="color" id="project_hero_video_overlay_color" name="project_hero_video_overlay_color" value="' . esc_attr($overlay_color) . '" />';
+    echo '<p class="description">Vali overlay värv, mis pannakse video peale.</p></td></tr>';
+    
+    // Video overlay opacity
+    $overlay_opacity = get_post_meta($post->ID, 'project_hero_video_overlay_opacity', true);
+    if (empty($overlay_opacity)) {
+        $overlay_opacity = '0.3';
+    }
+    echo '<tr class="hero-video-overlay-row" style="' . ($hero_media_type !== 'video' ? 'display:none;' : '') . '"><th scope="row"><label for="project_hero_video_overlay_opacity">Video overlay läbipaistvus</label></th>';
+    echo '<td><input type="range" id="project_hero_video_overlay_opacity" name="project_hero_video_overlay_opacity" value="' . esc_attr($overlay_opacity) . '" min="0" max="1" step="0.1" />';
+    echo '<span id="opacity-display">' . esc_html($overlay_opacity) . '</span>';
+    echo '<p class="description">Määra overlay läbipaistvus (0 = täiesti läbipaistev, 1 = täiesti kattev).</p></td></tr>';
+    
     echo '</table>';
 }
 
@@ -1026,12 +1045,17 @@ add_action('save_post', function($post_id) {
         isset($_POST['project_hero_media_nonce_field']) && 
         wp_verify_nonce($_POST['project_hero_media_nonce_field'], 'project_hero_media_nonce')) {
         
-        $hero_fields = ['project_hero_media_type', 'project_hero_image', 'project_hero_video'];
+        $hero_fields = ['project_hero_media_type', 'project_hero_image', 'project_hero_video', 'project_hero_video_overlay_color', 'project_hero_video_overlay_opacity'];
         
         foreach ($hero_fields as $field) {
             if (isset($_POST[$field])) {
                 if ($field === 'project_hero_image' || $field === 'project_hero_video') {
                     update_post_meta($post_id, $field, esc_url_raw($_POST[$field]));
+                } elseif ($field === 'project_hero_video_overlay_opacity') {
+                    // Validate opacity value (0-1)
+                    $opacity = floatval($_POST[$field]);
+                    $opacity = max(0, min(1, $opacity));
+                    update_post_meta($post_id, $field, $opacity);
                 } else {
                     update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
                 }

@@ -4,13 +4,13 @@ jQuery(document).ready(function($) {
         const selectedType = $(this).val();
         
         // Hide all conditional rows
-        $('.hero-custom-image-row, .hero-video-row').hide();
+        $('.hero-custom-image-row, .hero-video-row, .hero-video-overlay-row').hide();
         
         // Show relevant row based on selection
         if (selectedType === 'custom_image') {
             $('.hero-custom-image-row').show();
         } else if (selectedType === 'video') {
-            $('.hero-video-row').show();
+            $('.hero-video-row, .hero-video-overlay-row').show();
         }
     });
     
@@ -100,5 +100,10 @@ jQuery(document).ready(function($) {
         input.val('');
         preview.empty();
         button.hide();
+    });
+    
+    // Handle opacity slider display update
+    $('#project_hero_video_overlay_opacity').on('input', function() {
+        $('#opacity-display').text($(this).val());
     });
 });
