@@ -2734,14 +2734,10 @@ input, textarea, select {
     margin-bottom: var(--space-sm);
 }
 
-/* First content block - make it more narrow */
+/* First content block - balanced layout */
 .first-content-block .feature-content {
-    grid-template-columns: 1fr 2fr;
-    gap: var(--space-4xl);
-}
-
-.first-content-block .feature-text {
-    max-width: 100%;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6xl);
 }
 
 /* Admin Content Blocks Styles */
