@@ -126,7 +126,7 @@ function avora_create_navigation_menu() {
             // Add menu items
             $menu_items = [
                 ['title' => 'Esileht', 'url' => home_url('/'), 'order' => 1],
-                ['title' => 'Meist', 'url' => home_url('/meist/'), 'order' => 2],
+                ['title' => 'Meist', 'url' => home_url('/ettevottest/'), 'order' => 2],
                 ['title' => 'Projektid', 'url' => home_url('/projektid/'), 'order' => 3],
                 ['title' => 'Kontakt', 'url' => home_url('/kontakt/'), 'order' => 4]
             ];

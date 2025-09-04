@@ -63,33 +63,12 @@ body_class($body_classes);
             <!-- Desktop Navigation -->
             <nav class="desktop-navigation">
                 <?php
-                if (has_nav_menu('primary')) {
-                    wp_nav_menu([
-                        'theme_location' => 'primary',
-                        'menu_class' => 'nav-menu',
-                        'container' => false,
-                        'depth' => 1,
-                    ]);
-                } else {
-                    // Fallback menu with modern styling
-                    echo '<ul class="nav-menu">';
-                    
-                    $current_url = $_SERVER['REQUEST_URI'];
-                    $menu_items = [
-                        ['url' => home_url(), 'title' => 'Esileht', 'slug' => '/'],
-                        ['url' => home_url('/ettevottest'), 'title' => 'Meist', 'slug' => '/ettevottest'],
-                        ['url' => home_url('/projektid'), 'title' => 'Projektid', 'slug' => '/projektid'],
-                        ['url' => home_url('/kontakt'), 'title' => 'Kontakt', 'slug' => '/kontakt']
-                    ];
-                    
-                    foreach ($menu_items as $item) {
-                        $is_active = ($current_url === $item['slug'] || str_contains($current_url, $item['slug']));
-                        $active_class = $is_active ? ' class="active"' : '';
-                        echo '<li' . $active_class . '><a href="' . $item['url'] . '">' . $item['title'] . '</a></li>';
-                    }
-                    
-                    echo '</ul>';
-                }
+                wp_nav_menu([
+                    'theme_location' => 'primary',
+                    'menu_class' => 'nav-menu',
+                    'container' => false,
+                    'depth' => 1,
+                ]);
                 ?>
             </nav>
             
@@ -114,12 +93,14 @@ body_class($body_classes);
                 <span class="close-line"></span>
             </button>
             
-            <ul class="mobile-nav-menu">
-                <li><a href="<?php echo home_url(); ?>">Esileht</a></li>
-                <li><a href="<?php echo home_url('/ettevottest'); ?>">Meist</a></li>
-                <li><a href="<?php echo home_url('/projektid'); ?>">Projektid</a></li>
-                <li><a href="<?php echo home_url('/kontakt'); ?>">Kontakt</a></li>
-            </ul>
+            <?php
+            wp_nav_menu([
+                'theme_location' => 'primary',
+                'menu_class' => 'mobile-nav-menu',
+                'container' => false,
+                'depth' => 1,
+            ]);
+            ?>
         </div>
     </nav>
 </header>
