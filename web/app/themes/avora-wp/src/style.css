@@ -2713,7 +2713,6 @@ input, textarea, select {
 .feature-content.reverse .feature-text {
     order: 1;
     justify-self: start;
-    max-width: 60%;
 }
 
 .block-content {
