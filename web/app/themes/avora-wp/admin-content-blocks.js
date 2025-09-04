@@ -5,7 +5,13 @@ jQuery(document).ready(function($) {
     $('.add-content-block').on('click', function(e) {
         e.preventDefault();
         
-        let template = $('#content-block-template').html();
+        // Check if we're on About Us page or Project page
+        let template = $('#content-block-template').html() || $('#project-content-block-template').html();
+        if (!template) {
+            console.error('Content block template not found');
+            return;
+        }
+        
         let blockHtml = template.replace(/\{\{INDEX\}\}/g, blockIndex)
                                .replace(/\{\{INDEX_DISPLAY\}\}/g, blockIndex + 1);
         
@@ -181,7 +187,15 @@ jQuery(document).ready(function($) {
             blocks.push(blockData);
         });
         
-        $('#about_content_blocks_data').val(JSON.stringify(blocks));
+        // Update the appropriate hidden field based on which page we're on
+        let hiddenField = $('#about_content_blocks_data');
+        if (hiddenField.length === 0) {
+            hiddenField = $('#project_content_blocks_data');
+        }
+        
+        if (hiddenField.length > 0) {
+            hiddenField.val(JSON.stringify(blocks));
+        }
     }
     
     // Initialize TinyMCE change listeners for existing editors

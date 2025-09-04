@@ -79,13 +79,13 @@
         <div class="container">
             <div class="feature-content">
                 <div class="feature-image">
-                    <img src="<?php echo get_template_directory_uri(); ?>/images/2 (2).jpg" alt="AVORA Kvaliteetne Ehitus" class="circle-image">
+                    <img src="<?php echo get_template_directory_uri(); ?>/images/feature-screenshot.png" alt="AVORA Kvaliteetne Ehitus" class="circle-image">
                 </div>
                 <div class="feature-text">
                     <h2>Kvaliteet ja täpsus igas detailis</h2>
                     <p>Tuginedes kvaliteetsetele materjalidele ja uuenduslikele ehitusviisidele, loome kodusid, mis ei kesta vaid aastaid, vaid aastakümneid - läbi põlvkondade.</p>
                     <div class="feature-buttons">
-                        <a href="<?php echo home_url('/meist'); ?>" class="btn btn-outline-accent">
+                        <a href="<?php echo home_url('/ettevottest'); ?>" class="btn btn-outline-accent">
                             Loe meist rohkem
                         </a>
                     </div>

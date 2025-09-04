@@ -15,6 +15,7 @@
 # Environment and config
 .env
 *.env
+.env.backup
 
 # Database
 *.sql

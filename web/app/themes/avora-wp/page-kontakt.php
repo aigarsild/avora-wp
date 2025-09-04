@@ -62,8 +62,8 @@ get_header(); ?>
                 
                 <div class="company-details">
                     <p><strong>Registrikood:</strong> <?php echo esc_html($company_registry_code); ?></p>
-                    <p><strong>Majandustegevuse reg:</strong> <?php echo esc_html($company_economic_reg); ?></p>
                     <p><strong>KMKR:</strong> <?php echo esc_html($company_vat_reg); ?></p>
+                    <p><strong>Majandustegevuse reg:</strong> <?php echo esc_html($company_economic_reg); ?></p>
                     <p><strong>Email:</strong> <a href="mailto:<?php echo esc_attr($company_email); ?>"><?php echo esc_html($company_email); ?></a></p>
                 </div>
                 

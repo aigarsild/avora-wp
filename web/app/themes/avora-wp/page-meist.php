@@ -98,7 +98,7 @@ get_header(); ?>
             $block_type = isset($block['block_type']) ? $block['block_type'] : 'regular';
             ?>
             <!-- DEBUG: Block type is: <?php echo esc_html($block_type); ?> -->
-            <section class="content-block-section <?php echo esc_attr($block_type === 'fullwidth' ? 'fullwidth-block' : ''); ?>">
+            <section class="content-block-section <?php echo esc_attr($block_type === 'fullwidth' ? 'fullwidth-block' : ''); ?> <?php echo esc_attr($index === 0 ? 'first-content-block' : ''); ?>">
                 <div class="container">
                     <?php if ($block_type === 'fullwidth'): ?>
                         <!-- DEBUG: Rendering FULLWIDTH block -->

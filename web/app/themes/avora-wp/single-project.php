@@ -8,6 +8,20 @@
         <div class="project-header-content hero-content">
             <div class="project-header-text hero-text">
                 <h1><?php the_title(); ?></h1>
+                <?php 
+                $project_link = get_post_meta(get_the_ID(), 'project_link', true);
+                
+                if (!empty($project_link)) : 
+                    // Clean the URL for display (remove protocol)
+                    $display_url = preg_replace('#^https?://#', '', $project_link);
+                    $display_url = rtrim($display_url, '/');
+                ?>
+                    <div class="project-link">
+                        <a href="<?php echo esc_url($project_link); ?>" target="_blank" rel="noopener noreferrer" class="project-external-link">
+                            <?php echo esc_html($display_url); ?> →
+                        </a>
+                    </div>
+                <?php endif; ?>
                 <?php if (get_the_content()) : ?>
                     <div class="project-description"><?php the_content(); ?></div>
                 <?php endif; ?>
@@ -17,7 +31,31 @@
                     </a>
                 </div>
             </div>
-            <?php if (has_post_thumbnail()) : ?>
+            <?php 
+            // Get hero media settings
+            $hero_media_type = get_post_meta(get_the_ID(), 'project_hero_media_type', true);
+            $hero_image = get_post_meta(get_the_ID(), 'project_hero_image', true);
+            $hero_video = get_post_meta(get_the_ID(), 'project_hero_video', true);
+            
+            // Default to featured image if no custom media type is set
+            if (empty($hero_media_type)) {
+                $hero_media_type = 'featured';
+            }
+            
+            // Display hero media based on type
+            if ($hero_media_type === 'video' && !empty($hero_video)) : ?>
+                <div class="project-header-image hero-image">
+                    <video autoplay muted loop playsinline class="hero-video">
+                        <source src="<?php echo esc_url($hero_video); ?>" type="video/mp4">
+                        <source src="<?php echo esc_url($hero_video); ?>" type="video/webm">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            <?php elseif ($hero_media_type === 'custom_image' && !empty($hero_image)) : ?>
+                <div class="project-header-image hero-image">
+                    <img src="<?php echo esc_url($hero_image); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" class="hero-img">
+                </div>
+            <?php elseif (has_post_thumbnail()) : ?>
                 <div class="project-header-image hero-image">
                     <?php the_post_thumbnail('large', ['class' => 'hero-img']); ?>
                 </div>
@@ -25,6 +63,91 @@
         </div>
     </div>
 </section>
+
+<!-- Project Content Blocks -->
+<?php 
+$project_content_blocks = get_post_meta(get_the_ID(), 'project_content_blocks', true);
+$content_blocks = $project_content_blocks ? json_decode($project_content_blocks, true) : [];
+
+if (!empty($content_blocks)) : ?>
+    <?php foreach ($content_blocks as $index => $block) : ?>
+        <?php if (!empty($block['title']) || !empty($block['content']) || !empty($block['image'])) : ?>
+            <?php 
+            $block_type = isset($block['block_type']) ? $block['block_type'] : 'regular';
+            ?>
+            <section class="content-block-section <?php echo esc_attr($block_type === 'fullwidth' ? 'fullwidth-block' : ''); ?>">
+                <div class="container">
+                    <?php if ($block_type === 'fullwidth') : ?>
+                        <div class="fullwidth-content custom-fullwidth-block">
+                            <?php if (!empty($block['title'])) : ?>
+                                <h2><?php echo esc_html($block['title']); ?></h2>
+                            <?php endif; ?>
+                            <?php if (!empty($block['content'])) : ?>
+                                <div class="fullwidth-text">
+                                    <?php 
+                                    // Process content from TinyMCE editor
+                                    $content = $block['content'];
+                                    
+                                    // Clean the content first to remove unwanted characters
+                                    $cleaned_content = $content;
+                                    $cleaned_content = str_replace(['\r\n', '\n', '\r', 'rn', '\\r\\n', '\\n', '\\r'], '', $cleaned_content);
+                                    $cleaned_content = preg_replace('/\s+/', ' ', $cleaned_content);
+                                    $cleaned_content = trim($cleaned_content);
+                                    
+                                    // Check if content has paragraph tags already (from TinyMCE)
+                                    if (strpos($cleaned_content, '<p>') !== false || strpos($cleaned_content, '<br') !== false) {
+                                        // Content already has HTML formatting from TinyMCE
+                                        echo wp_kses_post($cleaned_content);
+                                    } else {
+                                        // Plain text content - convert line breaks to paragraphs
+                                        echo wp_kses_post(wpautop($cleaned_content));
+                                    }
+                                    ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php else : ?>
+                        <div class="feature-content <?php echo esc_attr($block['image_position'] === 'right' ? 'reverse' : ''); ?>">
+                            <?php if (!empty($block['image'])) : ?>
+                                <div class="feature-image">
+                                    <img src="<?php echo esc_url($block['image']); ?>" alt="<?php echo esc_attr($block['title']); ?>" class="circle-image">
+                                </div>
+                            <?php endif; ?>
+                            <div class="feature-text">
+                                <?php if (!empty($block['title'])) : ?>
+                                    <h2><?php echo esc_html($block['title']); ?></h2>
+                                <?php endif; ?>
+                                <?php if (!empty($block['content'])) : ?>
+                                    <div class="block-content">
+                                        <?php 
+                                        // Process content from TinyMCE editor
+                                        $content = $block['content'];
+                                        
+                                        // Clean the content first to remove unwanted characters
+                                        $cleaned_content = $content;
+                                        $cleaned_content = str_replace(['\r\n', '\n', '\r', 'rn', '\\r\\n', '\\n', '\\r'], '', $cleaned_content);
+                                        $cleaned_content = preg_replace('/\s+/', ' ', $cleaned_content);
+                                        $cleaned_content = trim($cleaned_content);
+                                        
+                                        // Check if content has paragraph tags already (from TinyMCE)
+                                        if (strpos($cleaned_content, '<p>') !== false || strpos($cleaned_content, '<br') !== false) {
+                                            // Content already has HTML formatting from TinyMCE
+                                            echo wp_kses_post($cleaned_content);
+                                        } else {
+                                            // Plain text content - convert line breaks to paragraphs
+                                            echo wp_kses_post(wpautop($cleaned_content));
+                                        }
+                                        ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </section>
+        <?php endif; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
 
 <!-- Project Gallery -->
 <?php 
@@ -50,8 +173,8 @@ if (!empty($gallery_images)) : ?>
             <div class="gallery-section">
                 <h2 class="gallery-title">Projekti galerii</h2>
                 <div class="gallery-grid">
-                    <?php foreach ($gallery_images as $image) : ?>
-                        <div class="gallery-item" onclick="openLightbox('<?php echo wp_get_attachment_url($image->ID); ?>', '<?php echo esc_attr($image->post_title); ?>')">
+                    <?php foreach ($gallery_images as $index => $image) : ?>
+                        <div class="gallery-item" onclick="openLightbox(<?php echo $index; ?>)">
                             <?php echo wp_get_attachment_image($image->ID, 'large'); ?>
                         </div>
                     <?php endforeach; ?>
@@ -67,15 +190,32 @@ if (!empty($gallery_images)) : ?>
     <div class="lightbox-content">
         <img id="lightbox-image" class="lightbox-image" src="" alt="">
         <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation(); previousImage()">‹</button>
+        <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation(); nextImage()">›</button>
     </div>
 </div>
 
 <script>
-function openLightbox(src, alt) {
+// Gallery data for navigation
+const galleryImages = [
+    <?php foreach ($gallery_images as $image) : ?>
+    {
+        src: '<?php echo wp_get_attachment_url($image->ID); ?>',
+        alt: '<?php echo esc_attr($image->post_title); ?>'
+    },
+    <?php endforeach; ?>
+];
+
+let currentImageIndex = 0;
+
+function openLightbox(index) {
+    currentImageIndex = index;
+    showCurrentImage();
     document.getElementById('lightbox').style.display = 'flex';
-    document.getElementById('lightbox-image').src = src;
-    document.getElementById('lightbox-image').alt = alt;
     document.body.style.overflow = 'hidden';
+    
+    // Show/hide navigation arrows based on position
+    updateNavigationVisibility();
 }
 
 function closeLightbox() {
@@ -83,16 +223,62 @@ function closeLightbox() {
     document.body.style.overflow = 'auto';
 }
 
-// Close lightbox with Escape key
+function showCurrentImage() {
+    if (galleryImages[currentImageIndex]) {
+        const img = document.getElementById('lightbox-image');
+        img.src = galleryImages[currentImageIndex].src;
+        img.alt = galleryImages[currentImageIndex].alt;
+    }
+}
+
+function nextImage() {
+    if (currentImageIndex < galleryImages.length - 1) {
+        currentImageIndex++;
+        showCurrentImage();
+        updateNavigationVisibility();
+    }
+}
+
+function previousImage() {
+    if (currentImageIndex > 0) {
+        currentImageIndex--;
+        showCurrentImage();
+        updateNavigationVisibility();
+    }
+}
+
+function updateNavigationVisibility() {
+    const prevBtn = document.querySelector('.lightbox-prev');
+    const nextBtn = document.querySelector('.lightbox-next');
+    
+    if (prevBtn) {
+        prevBtn.style.display = currentImageIndex === 0 ? 'none' : 'block';
+    }
+    
+    if (nextBtn) {
+        nextBtn.style.display = currentImageIndex === galleryImages.length - 1 ? 'none' : 'block';
+    }
+}
+
+// Keyboard navigation
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeLightbox();
+    if (document.getElementById('lightbox').style.display === 'flex') {
+        switch(e.key) {
+            case 'Escape':
+                closeLightbox();
+                break;
+            case 'ArrowLeft':
+                previousImage();
+                break;
+            case 'ArrowRight':
+                nextImage();
+                break;
+        }
     }
 });
 </script>
 
 <?php endif; ?>
-
 
 
 <!-- Related Projects -->

@@ -109,6 +109,8 @@ add_action('admin_enqueue_scripts', function($hook) {
             wp_enqueue_media();
             wp_enqueue_script('jquery-ui-sortable');
             wp_enqueue_script('project-media-uploader', get_template_directory_uri() . '/admin-media.js', array('jquery', 'jquery-ui-sortable'), '1.0.0', true);
+            wp_enqueue_script('project-hero-media', get_template_directory_uri() . '/admin-hero-media.js', array('jquery'), '1.0.0', true);
+            wp_enqueue_script('project-content-blocks', get_template_directory_uri() . '/admin-content-blocks.js', array('jquery'), '1.0.0', true);
             wp_enqueue_style('project-admin-styles', get_template_directory_uri() . '/admin-styles.css', array(), '1.0.0');
         }
         
@@ -263,6 +265,24 @@ add_action('add_meta_boxes', function() {
     );
     
     add_meta_box(
+        'project_hero_media',
+        'Projekti hero pilt/video',
+        'project_hero_media_callback',
+        'project',
+        'normal',
+        'high'
+    );
+    
+    add_meta_box(
+        'project_content_blocks',
+        'Projekti lisasisu plokid',
+        'project_content_blocks_callback',
+        'project',
+        'normal',
+        'high'
+    );
+    
+    add_meta_box(
         'project_gallery',
         'Projekti galerii',
         'project_gallery_callback',
@@ -343,6 +363,7 @@ function project_details_callback($post) {
     $units = get_post_meta($post->ID, 'project_units', true);
     $area = get_post_meta($post->ID, 'project_area', true);
     $logo = get_post_meta($post->ID, 'project_logo', true);
+    $link = get_post_meta($post->ID, 'project_link', true);
     
     echo '<table class="form-table">';
     echo '<tr><th scope="row"><label for="project_status">Staatus</label></th>';
@@ -368,6 +389,10 @@ function project_details_callback($post) {
     
     echo '<tr><th scope="row"><label for="project_area">Pindala</label></th>';
     echo '<td><input type="text" id="project_area" name="project_area" value="' . esc_attr($area) . '" class="regular-text" /></td></tr>';
+    
+    echo '<tr><th scope="row"><label for="project_link">Projekti link</label></th>';
+    echo '<td><input type="url" id="project_link" name="project_link" value="' . esc_attr($link) . '" class="regular-text" placeholder="https://example.com" />';
+    echo '<p class="description">Lisa projekti kodulehe või lisainfo link. Link kuvatakse projekti pealkirja all.</p></td></tr>';
     
     echo '<tr><th scope="row"><label for="project_logo">Arendaja logo</label></th>';
     echo '<td>';
@@ -744,6 +769,192 @@ function contact_form_settings_callback($post) {
     echo '</table>';
 }
 
+// Hero media callback
+function project_hero_media_callback($post) {
+    wp_nonce_field('project_hero_media_nonce', 'project_hero_media_nonce_field');
+    
+    $hero_image = get_post_meta($post->ID, 'project_hero_image', true);
+    $hero_video = get_post_meta($post->ID, 'project_hero_video', true);
+    $hero_media_type = get_post_meta($post->ID, 'project_hero_media_type', true);
+    
+    // Default to 'featured' if not set
+    if (empty($hero_media_type)) {
+        $hero_media_type = 'featured';
+    }
+    
+    echo '<table class="form-table">';
+    
+    // Media type selection
+    echo '<tr><th scope="row"><label>Hero meedia tüüp</label></th>';
+    echo '<td>';
+    echo '<label><input type="radio" name="project_hero_media_type" value="featured" ' . checked($hero_media_type, 'featured', false) . '> Kasuta featured image (vaikimisi)</label><br>';
+    echo '<label><input type="radio" name="project_hero_media_type" value="custom_image" ' . checked($hero_media_type, 'custom_image', false) . '> Kohandatud pilt</label><br>';
+    echo '<label><input type="radio" name="project_hero_media_type" value="video" ' . checked($hero_media_type, 'video', false) . '> Video</label>';
+    echo '</td></tr>';
+    
+    // Custom image upload
+    echo '<tr class="hero-custom-image-row" style="' . ($hero_media_type !== 'custom_image' ? 'display:none;' : '') . '"><th scope="row"><label for="project_hero_image">Hero pilt</label></th>';
+    echo '<td>';
+    echo '<div class="hero-image-upload">';
+    echo '<input type="hidden" id="project_hero_image" name="project_hero_image" value="' . esc_attr($hero_image) . '" />';
+    echo '<div class="hero-image-preview">';
+    if (!empty($hero_image)) {
+        echo '<img src="' . esc_url($hero_image) . '" alt="Hero pilt" style="max-width: 300px; height: auto; margin-bottom: 10px; display: block;" />';
+    }
+    echo '</div>';
+    echo '<button type="button" class="button hero-image-upload-btn">Vali hero pilt</button> ';
+    echo '<button type="button" class="button hero-image-remove-btn" style="' . (empty($hero_image) ? 'display:none;' : '') . '">Eemalda pilt</button>';
+    echo '<p class="description">Vali kohandatud hero pilt. See asendab featured image projekti detailide lehel.</p>';
+    echo '</div>';
+    echo '</td></tr>';
+    
+    // Video upload
+    echo '<tr class="hero-video-row" style="' . ($hero_media_type !== 'video' ? 'display:none;' : '') . '"><th scope="row"><label for="project_hero_video">Hero video</label></th>';
+    echo '<td>';
+    echo '<div class="hero-video-upload">';
+    echo '<input type="hidden" id="project_hero_video" name="project_hero_video" value="' . esc_attr($hero_video) . '" />';
+    echo '<div class="hero-video-preview">';
+    if (!empty($hero_video)) {
+        echo '<video controls style="max-width: 300px; height: auto; margin-bottom: 10px; display: block;">';
+        echo '<source src="' . esc_url($hero_video) . '">';
+        echo 'Your browser does not support the video tag.';
+        echo '</video>';
+    }
+    echo '</div>';
+    echo '<button type="button" class="button hero-video-upload-btn">Vali hero video</button> ';
+    echo '<button type="button" class="button hero-video-remove-btn" style="' . (empty($hero_video) ? 'display:none;' : '') . '">Eemalda video</button>';
+    echo '<p class="description">Vali hero video. Video kuvatakse automaatselt mängides hero sektsioonis.</p>';
+    echo '</div>';
+    echo '</td></tr>';
+    
+    echo '</table>';
+}
+
+// Project content blocks callback (reuses About Us content blocks logic)
+function project_content_blocks_callback($post) {
+    wp_nonce_field('project_content_blocks_nonce', 'project_content_blocks_nonce_field');
+    
+    $content_blocks = get_post_meta($post->ID, 'project_content_blocks', true);
+    $content_blocks = $content_blocks ? json_decode($content_blocks, true) : [];
+    
+    echo '<div class="project-content-blocks-manager">';
+    echo '<div class="blocks-actions">';
+    echo '<button type="button" class="button add-content-block">Lisa uus sisuplokk</button>';
+    echo '<p class="description">Lisa lisasisu plokke koos piltidega. Saad valida, millisel küljel pilt asub. Pildid kuvatakse ümmargustena.</p>';
+    echo '</div>';
+    
+    echo '<div class="content-blocks-container" id="content-blocks-container">';
+    
+    if (!empty($content_blocks)) {
+        foreach ($content_blocks as $index => $block) {
+            echo_project_content_block_html($index, $block);
+        }
+    }
+    
+    echo '</div>';
+    
+    echo '<input type="hidden" id="project_content_blocks_data" name="project_content_blocks_data" value="' . esc_attr(json_encode($content_blocks, JSON_UNESCAPED_UNICODE)) . '" />';
+    echo '</div>';
+    
+    // Add template for new blocks
+    echo '<script type="text/html" id="project-content-block-template">';
+    echo_project_content_block_html('{{INDEX}}', [
+        'title' => '',
+        'content' => '',
+        'image' => '',
+        'image_position' => 'left',
+        'block_type' => 'regular'
+    ]);
+    echo '</script>';
+}
+
+// Helper function to generate project content block HTML (similar to about us)
+function echo_project_content_block_html($index, $block) {
+    $title = isset($block['title']) ? $block['title'] : '';
+    $content = isset($block['content']) ? $block['content'] : '';
+    $image = isset($block['image']) ? $block['image'] : '';
+    $image_position = isset($block['image_position']) ? $block['image_position'] : 'left';
+    $block_type = isset($block['block_type']) ? $block['block_type'] : 'regular';
+    
+    echo '<div class="content-block" data-index="' . esc_attr($index) . '">';
+    echo '<div class="content-block-header">';
+    echo '<h4>Sisuplokk ' . (is_numeric($index) ? ($index + 1) : '{{INDEX_DISPLAY}}') . '</h4>';
+    echo '<button type="button" class="button-link remove-content-block" title="Eemalda plokk">&times;</button>';
+    echo '</div>';
+    
+    echo '<table class="form-table">';
+    
+    // Title
+    echo '<tr><th scope="row"><label>Pealkiri</label></th>';
+    echo '<td><input type="text" class="block-title regular-text" value="' . esc_attr($title) . '" placeholder="Sisesta ploki pealkiri" /></td></tr>';
+    
+    // Block type
+    echo '<tr><th scope="row"><label>Ploki tüüp</label></th>';
+    echo '<td>';
+    echo '<label><input type="radio" name="block_type_' . esc_attr($index) . '" class="block-type" value="regular" ' . checked($block_type, 'regular', false) . '> Tavaline (koos pildiga)</label><br>';
+    echo '<label><input type="radio" name="block_type_' . esc_attr($index) . '" class="block-type" value="fullwidth" ' . checked($block_type, 'fullwidth', false) . '> Täislaiuses (ilma pildita)</label>';
+    echo '</td></tr>';
+    
+    // Image
+    echo '<tr><th scope="row"><label>Pilt</label></th>';
+    echo '<td>';
+    echo '<div class="block-image-upload">';
+    echo '<input type="hidden" class="block-image" value="' . esc_attr($image) . '" />';
+    echo '<div class="image-preview">';
+    if (!empty($image)) {
+        echo '<img src="' . esc_url($image) . '" alt="Ploki pilt" style="max-width: 200px; height: auto; margin-bottom: 10px; display: block;" />';
+    }
+    echo '</div>';
+    echo '<button type="button" class="button block-image-upload-btn">Vali pilt</button> ';
+    echo '<button type="button" class="button block-image-remove-btn" style="' . (empty($image) ? 'display:none;' : '') . '">Eemalda pilt</button>';
+    echo '</div>';
+    echo '</td></tr>';
+    
+    // Image position
+    echo '<tr><th scope="row"><label>Pildi asukoht</label></th>';
+    echo '<td>';
+    echo '<label><input type="radio" name="block_image_position_' . esc_attr($index) . '" class="block-image-position" value="left" ' . checked($image_position, 'left', false) . '> Vasakul</label><br>';
+    echo '<label><input type="radio" name="block_image_position_' . esc_attr($index) . '" class="block-image-position" value="right" ' . checked($image_position, 'right', false) . '> Paremal</label>';
+    echo '</td></tr>';
+    
+    // Content
+    echo '<tr><th scope="row"><label>Sisu</label></th>';
+    echo '<td>';
+    
+    // Use wp_editor for real blocks, textarea for template
+    if (is_numeric($index)) {
+        // Real block - use wp_editor
+        $editor_id = 'project_block_content_' . $index;
+        wp_editor($content, $editor_id, [
+            'textarea_name' => 'project_block_content_' . $index,
+            'textarea_rows' => 8,
+            'media_buttons' => true,
+            'teeny' => false,
+            'wpautop' => true,
+            'editor_class' => 'block-content-editor',
+            'tinymce' => [
+                'height' => 250,
+                'menubar' => false,
+                'plugins' => 'lists,link,image,paste,code',
+                'toolbar1' => 'formatselect,bold,italic,underline,bullist,numlist,link,unlink,removeformat',
+                'toolbar2' => 'alignleft,aligncenter,alignright,undo,redo,code'
+            ],
+            'quicktags' => [
+                'buttons' => 'strong,em,link,ul,ol,li,code'
+            ]
+        ]);
+    } else {
+        // Template - use textarea that will be replaced by TinyMCE later
+        echo '<textarea class="block-content large-text" rows="6" placeholder="Sisesta ploki sisu...">' . esc_textarea($content) . '</textarea>';
+    }
+    
+    echo '<p class="description">Sisesta ploki sisu. Pilt kuvatakse ümmargusena nagu Meist lehel.</p>';
+    echo '</td></tr>';
+    
+    echo '</table>';
+    echo '</div>';
+}
+
 // Gallery management callback
 function project_gallery_callback($post) {
     wp_nonce_field('project_gallery_nonce', 'project_gallery_nonce_field');
@@ -790,11 +1001,16 @@ add_action('save_post', function($post_id) {
         isset($_POST['project_details_nonce_field']) && 
         wp_verify_nonce($_POST['project_details_nonce_field'], 'project_details_nonce')) {
         
-        $fields = ['project_status', 'project_location', 'project_year', 'project_type', 'project_units', 'project_area', 'project_logo'];
+                 $fields = ['project_status', 'project_location', 'project_year', 'project_type', 'project_units', 'project_area', 'project_logo', 'project_link', 'project_hero_media_type', 'project_hero_image', 'project_hero_video'];
         
         foreach ($fields as $field) {
             if (isset($_POST[$field])) {
-                update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+                if ($field === 'project_link' || $field === 'project_hero_image' || $field === 'project_hero_video') {
+                    // Use esc_url_raw for URL fields
+                    update_post_meta($post_id, $field, esc_url_raw($_POST[$field]));
+                } else {
+                    update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+                }
             }
         }
         
@@ -802,6 +1018,76 @@ add_action('save_post', function($post_id) {
         if (isset($_POST['project_gallery_images'])) {
             $gallery_images = sanitize_text_field($_POST['project_gallery_images']);
             update_post_meta($post_id, 'project_gallery_images', $gallery_images);
+        }
+    }
+    
+    // Save project hero media fields
+    if (get_post_type($post_id) === 'project' && 
+        isset($_POST['project_hero_media_nonce_field']) && 
+        wp_verify_nonce($_POST['project_hero_media_nonce_field'], 'project_hero_media_nonce')) {
+        
+        $hero_fields = ['project_hero_media_type', 'project_hero_image', 'project_hero_video'];
+        
+        foreach ($hero_fields as $field) {
+            if (isset($_POST[$field])) {
+                if ($field === 'project_hero_image' || $field === 'project_hero_video') {
+                    update_post_meta($post_id, $field, esc_url_raw($_POST[$field]));
+                } else {
+                    update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
+                }
+            }
+        }
+    }
+    
+    // Save project content blocks
+    if (get_post_type($post_id) === 'project' && 
+        isset($_POST['project_content_blocks_nonce_field']) && 
+        wp_verify_nonce($_POST['project_content_blocks_nonce_field'], 'project_content_blocks_nonce')) {
+        
+        // Try to get data from JSON first (for JavaScript-managed blocks)
+        $blocks_data = [];
+        if (isset($_POST['project_content_blocks_data']) && !empty($_POST['project_content_blocks_data'])) {
+            $decoded_blocks = json_decode(stripslashes($_POST['project_content_blocks_data']), true);
+            if (is_array($decoded_blocks)) {
+                $blocks_data = $decoded_blocks;
+            }
+        }
+        
+        // Also check for individual wp_editor fields (for existing blocks)
+        $index = 0;
+        while (isset($_POST['project_block_content_' . $index])) {
+            // If we don't have this block in JSON data, try to reconstruct it
+            if (!isset($blocks_data[$index])) {
+                $blocks_data[$index] = [];
+            }
+            
+            // Update content from wp_editor field
+            $blocks_data[$index]['content'] = wp_kses_post($_POST['project_block_content_' . $index]);
+            
+            $index++;
+        }
+        
+        if (!empty($blocks_data)) {
+            // Sanitize each block
+            $sanitized_blocks = [];
+            foreach ($blocks_data as $block) {
+                $content = $block['content'] ?? '';
+                // Clean unwanted characters from content
+                $content = str_replace(['\r\n', '\n', '\r', 'rn', '\\r\\n', '\\n', '\\r'], '', $content);
+                $content = preg_replace('/\s+/', ' ', $content);
+                $content = trim($content);
+                
+                $sanitized_blocks[] = [
+                    'title' => sanitize_text_field($block['title'] ?? ''),
+                    'content' => wp_kses_post($content),
+                    'image' => esc_url_raw($block['image'] ?? ''),
+                    'image_position' => in_array($block['image_position'] ?? 'left', ['left', 'right']) ? $block['image_position'] : 'left',
+                    'block_type' => in_array($block['block_type'] ?? 'regular', ['regular', 'fullwidth']) ? $block['block_type'] : 'regular'
+                ];
+            }
+            update_post_meta($post_id, 'project_content_blocks', json_encode($sanitized_blocks, JSON_UNESCAPED_UNICODE));
+        } else {
+            update_post_meta($post_id, 'project_content_blocks', '');
         }
     }
     
