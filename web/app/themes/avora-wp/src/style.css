@@ -2868,9 +2868,24 @@ input, textarea, select {
 
 /* Responsive adjustments for content blocks */
 @media (max-width: 768px) {
-    .feature-content.reverse .feature-image,
+    .feature-content,
+    .feature-content.reverse {
+        grid-template-columns: 1fr;
+        gap: var(--space-2xl);
+        text-align: center;
+    }
+    
+    .feature-content .feature-image,
+    .feature-content.reverse .feature-image {
+        order: -1;
+        justify-self: center;
+    }
+    
+    .feature-content .feature-text,
     .feature-content.reverse .feature-text {
-        order: initial;
+        order: 1;
+        justify-self: center;
+        max-width: 100%;
     }
 }
 
