@@ -336,8 +336,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     video.addEventListener('loadeddata', () => {
                         video.setAttribute('data-loaded', 'true');
                         
-                        // Apply custom playback speed
+                        // Apply custom playback speed with optimization
                         const playbackSpeed = parseFloat(video.dataset.playbackSpeed) || 1;
+                        
+                        // For slow-motion, ensure smooth playback
+                        if (playbackSpeed < 1) {
+                            // Force higher quality rendering for slow-motion
+                            video.style.imageRendering = 'optimizeQuality';
+                            video.style.imageRendering = '-webkit-optimize-contrast';
+                        }
+                        
                         video.playbackRate = playbackSpeed;
                     });
                     

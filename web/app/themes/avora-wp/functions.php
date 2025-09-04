@@ -864,7 +864,8 @@ function project_hero_media_callback($post) {
     echo '<tr class="hero-video-overlay-row" style="' . ($hero_media_type !== 'video' ? 'display:none;' : '') . '"><th scope="row"><label for="project_hero_video_playback_speed">Video kiirus</label></th>';
     echo '<td><input type="range" id="project_hero_video_playback_speed" name="project_hero_video_playback_speed" value="' . esc_attr($playback_speed) . '" min="0.25" max="2" step="0.25" />';
     echo '<span id="speed-display">' . esc_html($playback_speed) . 'x</span>';
-    echo '<p class="description">Määra video mängimise kiirus (0.25x = aeglane, 1x = tavaline, 2x = kiire).</p></td></tr>';
+    echo '<p class="description">Määra video mängimise kiirus (0.25x = aeglane, 1x = tavaline, 2x = kiire).<br>';
+    echo '<strong>Märkus:</strong> Aeglasema taasesituse jaoks kasutage kõrge kaadrisagedusega videot (60fps) parima tulemuse saamiseks.</p></td></tr>';
     
     echo '</table>';
 }

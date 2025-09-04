@@ -1610,6 +1610,12 @@ input, textarea, select {
     backface-visibility: hidden;
     /* Smooth loading */
     transition: opacity 0.3s ease-in-out;
+    /* Smooth playback optimizations */
+    image-rendering: optimizeQuality;
+    image-rendering: -webkit-optimize-contrast;
+    transform: translateZ(0);
+    /* Force hardware acceleration for smoother slow-motion */
+    transform: translate3d(0, 0, 0);
 }
 
 .hero-video:not([data-loaded]) {
