@@ -2741,7 +2741,7 @@ input, textarea, select {
 }
 
 .first-content-block .feature-text {
-    max-width: 70%;
+    max-width: 100%;
 }
 
 /* Admin Content Blocks Styles */
