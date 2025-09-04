@@ -2462,6 +2462,21 @@ input, textarea, select {
         order: -1;
     }
     
+    /* Project page hero text - wider on mobile */
+    .project-header.hero .hero-text {
+        max-width: 85%;
+    }
+    
+    /* Smaller border radius for mobile videos/images */
+    .project-header.hero .hero-video,
+    .project-header.hero .hero-img {
+        border-radius: 0 0 40px 0;
+    }
+    
+    .project-header.hero .video-overlay {
+        border-radius: 0 0 40px 0;
+    }
+    
     .hero-img {
         border-radius: 20px;
     }
