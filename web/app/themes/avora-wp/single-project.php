@@ -63,7 +63,17 @@
                 $rgba_color = "rgba($r, $g, $b, $overlay_opacity)";
                 ?>
                 <div class="project-header-image hero-image">
-                    <video autoplay muted loop playsinline class="hero-video">
+                    <video 
+                        autoplay 
+                        muted 
+                        loop 
+                        playsinline 
+                        preload="metadata"
+                        class="hero-video"
+                        poster="<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID(), 'large')); ?>"
+                        loading="lazy"
+                        data-src="<?php echo esc_url($hero_video); ?>"
+                    >
                         <source src="<?php echo esc_url($hero_video); ?>" type="video/mp4">
                         <source src="<?php echo esc_url($hero_video); ?>" type="video/webm">
                         Your browser does not support the video tag.
@@ -293,6 +303,71 @@ document.addEventListener('keydown', function(e) {
                 nextImage();
                 break;
         }
+    }
+});
+
+// Video loading optimization
+document.addEventListener('DOMContentLoaded', function() {
+    const heroVideo = document.querySelector('.hero-video');
+    
+    if (heroVideo) {
+        // Intersection Observer for lazy loading
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const video = entry.target;
+                    
+                    // Load video when it comes into view
+                    if (video.dataset.src && !video.src) {
+                        video.src = video.dataset.src;
+                        video.load();
+                    }
+                    
+                    // Mark as loaded for smooth transition
+                    video.addEventListener('loadeddata', () => {
+                        video.setAttribute('data-loaded', 'true');
+                    });
+                    
+                    videoObserver.unobserve(video);
+                }
+            });
+        }, {
+            rootMargin: '50px'
+        });
+        
+        videoObserver.observe(heroVideo);
+        
+        // Pause video when not visible (performance)
+        const pauseObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    video.play().catch(e => console.log('Video autoplay prevented:', e));
+                } else {
+                    video.pause();
+                }
+            });
+        }, {
+            threshold: 0.5
+        });
+        
+        pauseObserver.observe(heroVideo);
+        
+        // Reduce video quality on slow connections
+        if ('connection' in navigator) {
+            const connection = navigator.connection;
+            if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
+                heroVideo.style.display = 'none';
+                console.log('Video hidden due to slow connection');
+            }
+        }
+        
+        // Error handling
+        heroVideo.addEventListener('error', function() {
+            console.error('Video failed to load:', this.src);
+            // Fallback to poster image
+            this.style.display = 'none';
+        });
     }
 });
 </script>
