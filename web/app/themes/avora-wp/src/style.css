@@ -2453,6 +2453,9 @@ input, textarea, select {
     /* Project header mobile adjustments */
     .project-header.hero .hero-content {
         padding-top: 60px; /* Smaller mobile nav height */
+        text-align: center;
+        justify-items: center;
+        align-items: center;
     }
     
     .project-header.hero .hero-image {
@@ -2462,9 +2465,11 @@ input, textarea, select {
         order: -1;
     }
     
-    /* Project page hero text - wider on mobile */
+    /* Project page hero text - wider and centered on mobile */
     .project-header.hero .hero-text {
         max-width: 85%;
+        text-align: center;
+        margin: 0 auto;
     }
     
     /* Smaller border radius for mobile videos/images */
