@@ -111,4 +111,9 @@ jQuery(document).ready(function($) {
     $('#project_hero_video_overlay_blur').on('input', function() {
         $('#blur-display').text($(this).val() + 'px');
     });
+    
+    // Handle speed slider display update
+    $('#project_hero_video_playback_speed').on('input', function() {
+        $('#speed-display').text($(this).val() + 'x');
+    });
 });

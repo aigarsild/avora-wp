@@ -856,6 +856,16 @@ function project_hero_media_callback($post) {
     echo '<span id="blur-display">' . esc_html($overlay_blur) . 'px</span>';
     echo '<p class="description">Määra overlay hägususe tugevus (0 = hägusus puudub, 10 = tugev hägusus).</p></td></tr>';
     
+    // Video playback speed
+    $playback_speed = get_post_meta($post->ID, 'project_hero_video_playback_speed', true);
+    if (empty($playback_speed)) {
+        $playback_speed = '1';
+    }
+    echo '<tr class="hero-video-overlay-row" style="' . ($hero_media_type !== 'video' ? 'display:none;' : '') . '"><th scope="row"><label for="project_hero_video_playback_speed">Video kiirus</label></th>';
+    echo '<td><input type="range" id="project_hero_video_playback_speed" name="project_hero_video_playback_speed" value="' . esc_attr($playback_speed) . '" min="0.25" max="2" step="0.25" />';
+    echo '<span id="speed-display">' . esc_html($playback_speed) . 'x</span>';
+    echo '<p class="description">Määra video mängimise kiirus (0.25x = aeglane, 1x = tavaline, 2x = kiire).</p></td></tr>';
+    
     echo '</table>';
 }
 
@@ -1055,7 +1065,7 @@ add_action('save_post', function($post_id) {
         isset($_POST['project_hero_media_nonce_field']) && 
         wp_verify_nonce($_POST['project_hero_media_nonce_field'], 'project_hero_media_nonce')) {
         
-        $hero_fields = ['project_hero_media_type', 'project_hero_image', 'project_hero_video', 'project_hero_video_overlay_color', 'project_hero_video_overlay_opacity', 'project_hero_video_overlay_blur'];
+        $hero_fields = ['project_hero_media_type', 'project_hero_image', 'project_hero_video', 'project_hero_video_overlay_color', 'project_hero_video_overlay_opacity', 'project_hero_video_overlay_blur', 'project_hero_video_playback_speed'];
         
         foreach ($hero_fields as $field) {
             if (isset($_POST[$field])) {
@@ -1071,6 +1081,11 @@ add_action('save_post', function($post_id) {
                     $blur = floatval($_POST[$field]);
                     $blur = max(0, min(10, $blur));
                     update_post_meta($post_id, $field, $blur);
+                } elseif ($field === 'project_hero_video_playback_speed') {
+                    // Validate playback speed (0.25-2)
+                    $speed = floatval($_POST[$field]);
+                    $speed = max(0.25, min(2, $speed));
+                    update_post_meta($post_id, $field, $speed);
                 } else {
                     update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
                 }

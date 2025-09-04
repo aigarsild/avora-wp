@@ -48,6 +48,7 @@
                 $overlay_color = get_post_meta(get_the_ID(), 'project_hero_video_overlay_color', true);
                 $overlay_opacity = get_post_meta(get_the_ID(), 'project_hero_video_overlay_opacity', true);
                 $overlay_blur = get_post_meta(get_the_ID(), 'project_hero_video_overlay_blur', true);
+                $playback_speed = get_post_meta(get_the_ID(), 'project_hero_video_playback_speed', true);
                 
                 if (empty($overlay_color)) {
                     $overlay_color = '#000000';
@@ -57,6 +58,9 @@
                 }
                 if (empty($overlay_blur)) {
                     $overlay_blur = '2';
+                }
+                if (empty($playback_speed)) {
+                    $playback_speed = '1';
                 }
                 
                 // Convert hex color to RGB for rgba
@@ -77,6 +81,7 @@
                         poster="<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID(), 'large')); ?>"
                         loading="lazy"
                         data-src="<?php echo esc_url($hero_video); ?>"
+                        data-playback-speed="<?php echo esc_attr($playback_speed); ?>"
                     >
                         <source src="<?php echo esc_url($hero_video); ?>" type="video/mp4">
                         <source src="<?php echo esc_url($hero_video); ?>" type="video/webm">
@@ -330,6 +335,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Mark as loaded for smooth transition
                     video.addEventListener('loadeddata', () => {
                         video.setAttribute('data-loaded', 'true');
+                        
+                        // Apply custom playback speed
+                        const playbackSpeed = parseFloat(video.dataset.playbackSpeed) || 1;
+                        video.playbackRate = playbackSpeed;
                     });
                     
                     videoObserver.unobserve(video);
