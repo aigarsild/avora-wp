@@ -5,7 +5,7 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Loome väärtust, läbi kinnisvara</h1>
+                    <h1>Loome väärtust läbi kinnisvara</h1>
                     <p>Kaasaegne arhitektuur, kõrge ehituskvaliteet ja personaalsus - AVORA kaudu sünnivad kodud, mis peegeldavad Teie lugu.</p>
                     <div class="hero-buttons">
                         <a href="<?php echo home_url('/kontakt'); ?>" class="btn btn-primary">
