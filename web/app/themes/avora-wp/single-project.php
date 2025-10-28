@@ -69,6 +69,12 @@
                 $g = hexdec(substr($hex, 2, 2));
                 $b = hexdec(substr($hex, 4, 2));
                 $rgba_color = "rgba($r, $g, $b, $overlay_opacity)";
+                
+                // Build overlay style - only apply blur if value is greater than 0
+                $overlay_style = "background-color: " . esc_attr($rgba_color) . ";";
+                if ($overlay_blur > 0) {
+                    $overlay_style .= " backdrop-filter: blur(" . esc_attr($overlay_blur) . "px); -webkit-backdrop-filter: blur(" . esc_attr($overlay_blur) . "px);";
+                }
                 ?>
                 <div class="project-header-image hero-image">
                     <video 
@@ -87,7 +93,7 @@
                         <source src="<?php echo esc_url($hero_video); ?>" type="video/webm">
                         Your browser does not support the video tag.
                     </video>
-                    <div class="video-overlay" style="background-color: <?php echo esc_attr($rgba_color); ?>; backdrop-filter: blur(<?php echo esc_attr($overlay_blur); ?>px); -webkit-backdrop-filter: blur(<?php echo esc_attr($overlay_blur); ?>px);"></div>
+                    <div class="video-overlay" style="<?php echo $overlay_style; ?>"></div>
                 </div>
             <?php elseif ($hero_media_type === 'custom_image' && !empty($hero_image)) : ?>
                 <div class="project-header-image hero-image">
