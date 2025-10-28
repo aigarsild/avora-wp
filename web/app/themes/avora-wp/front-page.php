@@ -54,7 +54,7 @@
             <div class="video-overlay"></div>
         </div>
         <div class="container">
-            <h2>AVORA on Eesti kapitalil põhinev kinnisvaraarendus ettevõte</h2>
+            <h2>AVORA on Eesti kapitalil põhinev kinnisvaraarendus-ettevõte</h2>
             <p>Tegeleme eluhoonete ehitusega, mille tulemusena loodakse detailideni läbimõeldud elukeskkonnad Tallinnas ning Harjumaal.</p>
             <div class="quote-section-cta">
                 <a href="<?php echo home_url('/projektid'); ?>" class="btn btn-outline-white">
