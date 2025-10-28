@@ -70,11 +70,8 @@
                 $b = hexdec(substr($hex, 4, 2));
                 $rgba_color = "rgba($r, $g, $b, $overlay_opacity)";
                 
-                // Build overlay style - only apply blur if value is greater than 0
+                // Build overlay style - only background color, no blur effect
                 $overlay_style = "background-color: " . esc_attr($rgba_color) . ";";
-                if ($overlay_blur > 0) {
-                    $overlay_style .= " backdrop-filter: blur(" . esc_attr($overlay_blur) . "px); -webkit-backdrop-filter: blur(" . esc_attr($overlay_blur) . "px);";
-                }
                 ?>
                 <div class="project-header-image hero-image">
                     <video 
