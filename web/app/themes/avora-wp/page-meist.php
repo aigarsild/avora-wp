@@ -191,4 +191,13 @@ get_header(); ?>
     <?php endwhile; ?>
 <?php endif; ?>
 
+<!-- Bottom Image -->
+<section class="bottom-image-section" style="margin-bottom: 40px;">
+    <div class="container">
+        <div class="bottom-image-wrapper">
+            <img src="https://avora.ee/app/uploads/2026/01/image001.png" alt="Avora" style="width: 150px; height: 150px; display: block; margin: 0 auto;">
+        </div>
+    </div>
+</section>
+
 <?php get_footer(); ?>
